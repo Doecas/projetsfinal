@@ -1,0 +1,6180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IRL · RDC — Système Provincial de Surveillance Fiscale</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Bebas+Neue&family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════ ÉCRAN DE CONNEXION ════════════════════════════════════════ */
+ *, *::before, *::after {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+html, body {
+  height:100%;
+  font-family:'Outfit',sans-serif;
+}
+
+#login-screen {
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background: linear-gradient(160deg, #030B18 0%, #071428 40%, #0A1F3D 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+#login-screen::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image: linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px), linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
+  background-size:44px 44px;
+  pointer-events:none;
+}
+
+#login-screen::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(26,86,219,0.12) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.login-box {
+  position:relative;
+  z-index:1;
+  background:rgba(10,22,40,0.9);
+  border:1px solid rgba(212,175,55,0.3);
+  border-radius:20px;
+  padding:48px 40px;
+  width:100%;
+  max-width:420px;
+  box-shadow:0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,212,255,0.05);
+  backdrop-filter:blur(20px);
+}
+
+.login-logo {
+  text-align:center;
+  margin-bottom:32px;
+}
+
+.login-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;
+  letter-spacing:4px;
+  color:#D4AF37;
+  line-height:1;
+  margin-bottom:4px;
+}
+
+.login-sub {
+  font-size:11px;
+  color:rgba(255,255,255,0.4);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  font-family:'JetBrains Mono',monospace;
+}
+
+.login-label {
+  font-size:11px;
+  color:rgba(255,255,255,0.5);
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  margin-bottom:20px;
+  text-align:center;
+}
+
+.role-grid {
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.role-btn {
+  width:100%;
+  padding:16px 20px;
+  border-radius:12px;
+  border:1.5px solid;
+  cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  text-align:left;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  transition:all 0.25s;
+  position:relative;
+  overflow:hidden;
+}
+
+.role-btn::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transition:opacity 0.25s;
+}
+
+.role-btn:hover::before {
+  opacity:1;
+}
+
+.role-btn:hover {
+  transform:translateX(4px);
+}
+
+.role-minister {
+  background:rgba(212,175,55,0.08);
+  border-color:rgba(212,175,55,0.4);
+  color:#D4AF37;
+}
+
+.role-minister::before {
+  background:rgba(212,175,55,0.06);
+}
+
+.role-minister:hover {
+  border-color:rgba(212,175,55,0.8);
+  box-shadow:0 0 20px rgba(212,175,55,0.2);
+}
+
+.role-supervisor {
+  background:rgba(59,130,246,0.08);
+  border-color:rgba(59,130,246,0.4);
+  color:#60A5FA;
+}
+
+.role-supervisor::before {
+  background:rgba(59,130,246,0.06);
+}
+
+.role-supervisor:hover {
+  border-color:rgba(59,130,246,0.8);
+  box-shadow:0 0 20px rgba(59,130,246,0.2);
+}
+
+.role-agent {
+  background:rgba(16,185,129,0.08);
+  border-color:rgba(16,185,129,0.4);
+  color:#34D399;
+}
+
+.role-agent::before {
+  background:rgba(16,185,129,0.06);
+}
+
+.role-agent:hover {
+  border-color:rgba(16,185,129,0.8);
+  box-shadow:0 0 20px rgba(16,185,129,0.2);
+}
+
+.role-bailleur {
+  background:rgba(249,115,22,0.08);
+  border-color:rgba(249,115,22,0.4);
+  color:#FB923C;
+}
+
+.role-bailleur::before {
+  background:rgba(249,115,22,0.06);
+}
+
+.role-bailleur:hover {
+  border-color:rgba(249,115,22,0.8);
+  box-shadow:0 0 20px rgba(249,115,22,0.2);
+}
+
+.role-icon {
+  font-size:26px;
+  flex-shrink:0;
+}
+
+.role-name {
+  font-size:15px;
+  font-weight:800;
+}
+
+.role-desc {
+  font-size:11px;
+  opacity:0.65;
+  font-weight:400;
+  margin-top:2px;
+}
+
+.login-footer {
+  text-align:center;
+  margin-top:24px;
+  font-size:10px;
+  color:rgba(255,255,255,0.2);
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:1px;
+}
+
+/* ════════════════════════════════════════ APPS ════════════════════════════════════════ */ .app-screen {
+  display:none;
+  min-height:100vh;
+}
+
+.app-screen.active {
+  display:block;
+}
+
+/* Bouton retour flottant */ .back-fab {
+  position:fixed;
+  top:14px;
+  right:14px;
+  z-index:9998;
+  background:rgba(10,20,40,0.85);
+  border:1px solid rgba(255,255,255,0.15);
+  color:rgba(255,255,255,0.7);
+  border-radius:20px;
+  padding:7px 14px;
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  backdrop-filter:blur(10px);
+  transition:all 0.2s;
+  display:none;
+}
+
+.back-fab:hover {
+  background:rgba(10,20,40,0.98);
+  color:white;
+}
+
+.back-fab.visible {
+  display:block;
+}
+
+/* ═══════════════════════════════════════ INTERFACE 1 — TABLEAU DE BORD MINISTRE ═══════════════════════════════════════ */ #app-minister {
+  --or:#D4AF37;
+  --rouge:#CE1126;
+  --vert:#007A5E;
+  --bleu-nuit:#060D1F;
+  --bleu-sombre:#0A1628;
+  --bleu-panel:#0D1F3C;
+  --bleu-card:#102040;
+  --texte:#E8EDF5;
+  --texte-dim:#7A90B0;
+  --vert-ok:#00E67A;
+  --rouge-alerte:#FF3A5C;
+  --jaune-warn:#FFB800;
+  --cyan:#00D4FF;
+  background: var(--bleu-nuit);
+  color:var(--texte);
+  font-family:'Outfit',sans-serif;
+}
+
+#app-minister::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background: radial-gradient(ellipse 80% 60% at 10% 20%,rgba(0,122,94,.08) 0%,transparent 60%), radial-gradient(ellipse 60% 40% at 90% 80%,rgba(212,175,55,.06) 0%,transparent 50%);
+}
+
+#app-minister::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image: linear-gradient(rgba(0,212,255,.03) 1px,transparent 1px), linear-gradient(90deg,rgba(0,212,255,.03) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+
+.m-header {
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:linear-gradient(135deg,rgba(10,22,40,.98),rgba(13,31,60,.98));
+  border-bottom:2px solid var(--or);
+  padding:0 28px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  height:68px;
+  box-shadow:0 4px 40px rgba(212,175,55,.15);
+}
+
+.m-brand-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:19px;
+  letter-spacing:3px;
+  color:var(--or);
+  line-height:1;
+}
+
+.m-brand-sub {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--texte-dim);
+  letter-spacing:2px;
+}
+
+.m-center {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--cyan);
+  letter-spacing:1px;
+  text-align:center;
+}
+
+.m-live {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(0,230,122,.1);
+  border:1px solid var(--vert-ok);
+  border-radius:20px;
+  padding:5px 12px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--vert-ok);
+}
+
+.m-dot {
+  width:7px;
+  height:7px;
+  background:var(--vert-ok);
+  border-radius:50%;
+  animation:mpulse 1.5s infinite;
+}
+
+@keyframes mpulse {
+  0%,100% {
+  opacity:1;
+  transform:scale(1)
+}
+
+50% {
+  opacity:.4;
+  transform:scale(.8)
+}
+
+}
+
+.m-stats {
+  position:relative;
+  z-index:10;
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:1px;
+  background:rgba(0,212,255,.1);
+  border-bottom:1px solid rgba(0,212,255,.2);
+}
+
+.m-stat {
+  background:rgba(10,22,40,.95);
+  padding:14px 18px;
+  cursor:pointer;
+  transition:background .3s;
+}
+
+.m-stat:hover {
+  background:rgba(13,31,60,.98);
+}
+
+.m-stat-lbl {
+  font-size:9px;
+  color:var(--texte-dim);
+  text-transform:uppercase;
+  letter-spacing:2px;
+  font-family:'JetBrains Mono',monospace;
+  margin-bottom:4px;
+}
+
+.m-stat-val {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:26px;
+  letter-spacing:1px;
+  line-height:1;
+}
+
+.m-stat-val.or {
+  color:var(--or)
+}
+
+.m-stat-val.cy {
+  color:var(--cyan)
+}
+
+.m-stat-val.vt {
+  color:var(--vert-ok)
+}
+
+.m-stat-val.rg {
+  color:var(--rouge-alerte)
+}
+
+.m-stat-val.jn {
+  color:var(--jaune-warn)
+}
+
+.m-stat-chg {
+  font-size:9px;
+  color:var(--vert-ok);
+  font-family:'JetBrains Mono',monospace;
+}
+
+.m-stat-chg.neg {
+  color:var(--rouge-alerte);
+}
+
+.m-main {
+  position:relative;
+  z-index:10;
+  display:grid;
+  grid-template-columns:300px 1fr 270px;
+  height:calc(100vh - 68px - 73px);
+}
+
+.m-col {
+  overflow-y:auto;
+}
+
+.m-col::-webkit-scrollbar {
+  width:3px
+}
+
+.m-col::-webkit-scrollbar-thumb {
+  background:var(--bleu-panel);
+  border-radius:2px
+}
+
+.m-col-left {
+  border-right:1px solid rgba(0,212,255,.15);
+  background:rgba(6,13,31,.8);
+}
+
+.m-col-right {
+  border-left:1px solid rgba(0,212,255,.15);
+  background:rgba(6,13,31,.8);
+}
+
+.m-panel-hdr {
+  padding:12px 18px;
+  border-bottom:1px solid rgba(0,212,255,.15);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(10,22,40,.9);
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+
+.m-panel-title {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--or);
+  text-transform:uppercase;
+  letter-spacing:2px;
+}
+
+.m-commune {
+  padding:13px 18px;
+  border-bottom:1px solid rgba(0,212,255,.08);
+  cursor:pointer;
+  transition:all .2s;
+  position:relative;
+}
+
+.m-commune::before {
+  content:'';
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:transparent;
+  transition:background .2s;
+}
+
+.m-commune:hover {
+  background:rgba(0,212,255,.05)
+}
+
+.m-commune:hover::before {
+  background:var(--cyan)
+}
+
+.m-commune.active {
+  background:rgba(0,212,255,.08)
+}
+
+.m-commune.active::before {
+  background:var(--or)
+}
+
+.m-commune-name {
+  font-weight:600;
+  font-size:13px;
+  margin-bottom:5px;
+}
+
+.m-chips {
+  display:flex;
+  gap:10px;
+}
+
+.m-chip {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  padding:2px 7px;
+  border-radius:3px;
+}
+
+.chip-b {
+  background:rgba(0,212,255,.1);
+  color:var(--cyan);
+  border:1px solid rgba(0,212,255,.2)
+}
+
+.chip-l {
+  background:rgba(212,175,55,.1);
+  color:var(--or);
+  border:1px solid rgba(212,175,55,.2)
+}
+
+.m-bar {
+  margin-top:7px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+}
+
+.m-bar-track {
+  flex:1;
+  height:4px;
+  background:rgba(255,255,255,.1);
+  border-radius:2px;
+  overflow:hidden;
+}
+
+.m-bar-fill {
+  height:100%;
+  border-radius:2px;
+}
+
+.m-bar-pct {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  min-width:28px;
+}
+
+.m-center-col {
+  overflow-y:auto;
+}
+
+.m-center-col::-webkit-scrollbar {
+  width:3px
+}
+
+.m-center-col::-webkit-scrollbar-thumb {
+  background:var(--bleu-panel);
+  border-radius:2px
+}
+
+.m-detail-hdr {
+  background:linear-gradient(135deg,rgba(13,31,60,.98),rgba(10,22,40,.98));
+  padding:20px 28px;
+  border-bottom:1px solid rgba(212,175,55,.3);
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+
+.m-detail-title {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;
+  color:var(--or);
+  letter-spacing:4px;
+  margin-bottom:2px;
+}
+
+.m-detail-sub {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--texte-dim);
+  letter-spacing:2px;
+}
+
+.m-kpis {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:1px;
+  margin:20px 28px;
+  background:rgba(0,212,255,.1);
+  border-radius:8px;
+  overflow:hidden;
+  border:1px solid rgba(0,212,255,.15);
+}
+
+.m-kpi {
+  background:var(--bleu-card);
+  padding:16px;
+  text-align:center;
+}
+
+.m-kpi-val {
+  font-family:'Bebas Neue',sans-serif;
+  font-size:34px;
+  line-height:1;
+  margin-bottom:3px;
+}
+
+.m-kpi-val.cy {
+  color:var(--cyan)
+}
+
+.m-kpi-val.or {
+  color:var(--or)
+}
+
+.m-kpi-val.vt {
+  color:var(--vert-ok)
+}
+
+.m-kpi-val.rg {
+  color:var(--rouge-alerte)
+}
+
+.m-kpi-lbl {
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;
+  color:var(--texte-dim);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+}
+
+.m-tbl-wrap {
+  margin:0 28px 20px;
+  border-radius:8px;
+  overflow:hidden;
+  border:1px solid rgba(0,212,255,.12);
+}
+
+.m-sec-title {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--or);
+  text-transform:uppercase;
+  letter-spacing:2px;
+  padding:0 28px;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.m-sec-title::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background:rgba(212,175,55,.2)
+}
+
+.m-tbl-row {
+  display:grid;
+  grid-template-columns:36px 1fr 70px 85px 95px 80px;
+  align-items:center;
+  padding:11px 14px;
+  border-bottom:1px solid rgba(0,212,255,.08);
+  transition:background .2s;
+  cursor:pointer;
+  font-size:12px;
+}
+
+.m-tbl-row:last-child {
+  border-bottom:none
+}
+
+.m-tbl-row:hover {
+  background:rgba(0,212,255,.05)
+}
+
+.m-tbl-hdr {
+  background:rgba(10,22,40,.95);
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--texte-dim);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+.m-tbl-body {
+  background:rgba(13,31,60,.6);
+}
+
+.row-idx {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--texte-dim)
+}
+
+.bname {
+  font-weight:600;
+  font-size:13px
+}
+
+.bsub {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--texte-dim)
+}
+
+.bparc {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--cyan);
+  text-align:center
+}
+
+.bloyer {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--or);
+  text-align:right
+}
+
+.sbadge {
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:3px 8px;
+  border-radius:4px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  text-transform:uppercase
+}
+
+.s-ok {
+  background:rgba(0,230,122,.12);
+  color:var(--vert-ok);
+  border:1px solid rgba(0,230,122,.25)
+}
+
+.s-warn {
+  background:rgba(255,184,0,.12);
+  color:var(--jaune-warn);
+  border:1px solid rgba(255,184,0,.25)
+}
+
+.s-bad {
+  background:rgba(255,58,92,.12);
+  color:var(--rouge-alerte);
+  border:1px solid rgba(255,58,92,.25)
+}
+
+.sdot {
+  width:5px;
+  height:5px;
+  border-radius:50%
+}
+
+.sdot-ok {
+  background:var(--vert-ok)
+}
+
+.sdot-warn {
+  background:var(--jaune-warn);
+  animation:mpulse 2s infinite
+}
+
+.sdot-bad {
+  background:var(--rouge-alerte);
+  animation:mpulse 1s infinite
+}
+
+.mact {
+  background:rgba(0,212,255,.08);
+  border:1px solid rgba(0,212,255,.2);
+  color:var(--cyan);
+  padding:4px 9px;
+  border-radius:4px;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  cursor:pointer;
+  transition:all .2s;
+  text-transform:uppercase
+}
+
+.mact:hover {
+  background:rgba(0,212,255,.15);
+  border-color:var(--cyan)
+}
+
+.mact.bad {
+  background:rgba(255,58,92,.08);
+  border-color:rgba(255,58,92,.3);
+  color:var(--rouge-alerte)
+}
+
+.mact.bad:hover {
+  background:rgba(255,58,92,.15)
+}
+
+.m-alerte {
+  padding:13px 15px;
+  border-bottom:1px solid rgba(0,212,255,.08);
+  cursor:pointer;
+  position:relative;
+  transition:background .2s;
+}
+
+.m-alerte:hover {
+  background:rgba(255,58,92,.04)
+}
+
+.m-alerte::before {
+  content:'';
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px
+}
+
+.ac::before {
+  background:var(--rouge-alerte)
+}
+
+.aw::before {
+  background:var(--jaune-warn)
+}
+
+.ai::before {
+  background:var(--cyan)
+}
+
+.a-type {
+  font-family:'JetBrains Mono',monospace;
+  font-size:8px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  margin-bottom:3px
+}
+
+.ac .a-type {
+  color:var(--rouge-alerte)
+}
+
+.aw .a-type {
+  color:var(--jaune-warn)
+}
+
+.ai .a-type {
+  color:var(--cyan)
+}
+
+.a-msg {
+  font-size:11px;
+  line-height:1.4;
+  margin-bottom:5px
+}
+
+.a-time {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--texte-dim)
+}
+
+.m-footer {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:20;
+  background:rgba(6,13,31,.98);
+  border-top:1px solid rgba(0,212,255,.15);
+  padding:7px 28px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--texte-dim)
+}
+
+.m-f-dot {
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--vert-ok);
+  animation:mpulse 2s infinite
+}
+
+/* ═══════════════════════════════════════ INTERFACE 2 — SUPERVISEUR ═══════════════════════════════════════ */ 
+#app-supervisor {
+  --bg:#0B1120;
+  --surface:#111827;
+  --surface2:#1A2235;
+  --surface3:#1F2A3F;
+  --border:rgba(255,255,255,0.08);
+  --border2:rgba(255,255,255,0.14);
+  --text:#F1F5F9;
+  --text2:#94A3B8;
+  --text3:#475569;
+  --gold:#F59E0B;
+  --gold-dim:rgba(245,158,11,0.12);
+  --blue:#3B82F6;
+  --blue-dim:rgba(59,130,246,0.12);
+  --green:#10B981;
+  --green-dim:rgba(16,185,129,0.12);
+  --red:#EF4444;
+  --red-dim:rgba(239,68,68,0.12);
+  --orange:#F97316;
+  --orange-dim:rgba(249,115,22,0.12);
+  --cyan2:#06B6D4;
+  --cyan-dim:rgba(6,182,212,0.12);
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Plus Jakarta Sans',sans-serif;
+}
+
+.sv-nav {
+  background:var(--surface);
+  border-bottom:1px solid var(--border2);
+  height:60px;
+  display:flex;
+  align-items:center;
+  padding:0 20px;
+  gap:14px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 20px rgba(0,0,0,.4)
+}
+
+.sv-badge {
+  background:linear-gradient(135deg,var(--gold),#D97706);
+  color:#0B1120;
+  width:32px;
+  height:32px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:15px;
+  font-weight:900;
+  flex-shrink:0
+}
+
+.sv-name {
+  font-size:14px;
+  font-weight:800;
+  color:var(--text);
+  line-height:1
+}
+
+.sv-sub {
+  font-size:10px;
+  color:var(--text2);
+  font-weight:400
+}
+
+.sv-div {
+  width:1px;
+  height:30px;
+  background:var(--border2)
+}
+
+.sv-comm {
+  background:var(--gold-dim);
+  border:1px solid rgba(245,158,11,.3);
+  color:var(--gold);
+  padding:5px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:5px
+}
+
+.sv-tabs {
+  display:flex;
+  gap:2px;
+  margin-left:4px
+}
+
+.sv-tab {
+  padding:5px 12px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--text2);
+  cursor:pointer;
+  border:none;
+  background:transparent;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  transition:all .2s
+}
+
+.sv-tab:hover {
+  background:var(--surface2);
+  color:var(--text)
+}
+
+.sv-tab.active {
+  background:var(--blue-dim);
+  color:var(--blue)
+}
+
+.sv-right {
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+  gap:10px
+}
+
+.sv-sync {
+  background:var(--green-dim);
+  border:1px solid rgba(16,185,129,.3);
+  color:var(--green);
+  padding:6px 12px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  display:flex;
+  align-items:center;
+  gap:5px
+}
+
+.sv-sdot {
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--green);
+  animation:blink 1.5s infinite
+}
+
+.sv-chip {
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:20px;
+  padding:4px 10px;
+  font-size:10px;
+  color:var(--text2);
+  display:flex;
+  align-items:center;
+  gap:5px
+}
+
+@keyframes blink {
+  0%,100% {
+  opacity:1
+}
+
+50% {
+  opacity:.3
+}
+
+}
+
+.sv-panel {
+  display:none;
+  padding:18px
+}
+
+.sv-panel.active {
+  display:block
+}
+
+.sv-kpi-row {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-bottom:16px
+}
+
+@media(max-width:700px) {
+  .sv-kpi-row {
+  grid-template-columns:repeat(2,1fr)
+}
+
+}
+
+.sv-kpi {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+  position:relative;
+  overflow:hidden;
+  transition:transform .2s
+}
+
+.sv-kpi:hover {
+  transform:translateY(-2px)
+}
+
+.sv-kpi::before {
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:3px
+}
+
+.sv-kpi.cb::before {
+  background:var(--blue)
+}
+
+.sv-kpi.cg::before {
+  background:var(--gold)
+}
+
+.sv-kpi.cv::before {
+  background:var(--green)
+}
+
+.sv-kpi.cr::before {
+  background:var(--red)
+}
+
+.sv-kpi-icon {
+  font-size:20px;
+  margin-bottom:7px
+}
+
+.sv-kpi-val {
+  font-size:26px;
+  font-weight:800;
+  line-height:1;
+  margin-bottom:2px
+}
+
+.sv-kpi-val.b {
+  color:var(--blue)
+}
+
+.sv-kpi-val.g {
+  color:var(--gold)
+}
+
+.sv-kpi-val.v {
+  color:var(--green)
+}
+
+.sv-kpi-val.r {
+  color:var(--red)
+}
+
+.sv-kpi-lbl {
+  font-size:10px;
+  color:var(--text2)
+}
+
+.sv-kpi-delta {
+  font-size:9px;
+  margin-top:5px;
+  padding:2px 6px;
+  border-radius:4px;
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace
+}
+
+.du {
+  background:var(--green-dim);
+  color:var(--green)
+}
+
+.dd {
+  background:var(--red-dim);
+  color:var(--red)
+}
+
+.sv-grid2 {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+
+.sv-grid3 {
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:12px
+}
+
+@media(max-width:700px) {
+  .sv-grid2,.sv-grid3 {
+  grid-template-columns:1fr
+}
+
+}
+
+.sv-box {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:10px;
+  overflow:hidden;
+  margin-bottom:12px
+}
+
+.sv-box-hdr {
+  padding:12px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:var(--surface2)
+}
+
+.sv-box-title {
+  font-size:12px;
+  font-weight:700
+}
+
+.sv-box-sub {
+  font-size:10px;
+  color:var(--text2);
+  margin-top:1px
+}
+
+.sv-box-body {
+  padding:14px
+}
+
+.sv-badge2 {
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  padding:3px 7px;
+  border-radius:4px;
+  font-size:9px;
+  font-weight:700;
+  font-family:'JetBrains Mono',monospace
+}
+
+.bb {
+  background:var(--blue-dim);
+  color:var(--blue)
+}
+
+.bg {
+  background:var(--green-dim);
+  color:var(--green)
+}
+
+.br {
+  background:var(--red-dim);
+  color:var(--red)
+}
+
+.bo {
+  background:var(--orange-dim);
+  color:var(--orange)
+}
+
+.bgo {
+  background:var(--gold-dim);
+  color:var(--gold)
+}
+
+.sv-tbl {
+  width:100%;
+  border-collapse:collapse
+}
+
+.sv-tbl th {
+  padding:8px 11px;
+  text-align:left;
+  font-size:9px;
+  color:var(--text3);
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  border-bottom:1px solid var(--border);
+  background:var(--surface2)
+}
+
+.sv-tbl td {
+  padding:10px 11px;
+  font-size:11px;
+  border-bottom:1px solid var(--border);
+  color:var(--text)
+}
+
+.sv-tbl tr:last-child td {
+  border-bottom:none
+}
+
+.sv-tbl tr:hover td {
+  background:var(--surface2)
+}
+
+.sv-tbl .mono {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  color:var(--text2)
+}
+
+.sv-tbl .nm {
+  font-weight:600
+}
+
+.pill {
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:3px 8px;
+  border-radius:20px;
+  font-size:9px;
+  font-weight:700
+}
+
+.p-ok {
+  background:var(--green-dim);
+  color:var(--green)
+}
+
+.p-warn {
+  background:var(--orange-dim);
+  color:var(--orange)
+}
+
+.p-bad {
+  background:var(--red-dim);
+  color:var(--red)
+}
+
+.pd {
+  width:5px;
+  height:5px;
+  border-radius:50%
+}
+
+.pd-ok {
+  background:var(--green)
+}
+
+.pd-warn {
+  background:var(--orange);
+  animation:blink 2s infinite
+}
+
+.pd-bad {
+  background:var(--red);
+  animation:blink 1s infinite
+}
+
+.sv-act {
+  border:none;
+  border-radius:5px;
+  padding:4px 9px;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:10px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s
+}
+
+.av {
+  background:var(--blue-dim);
+  color:var(--blue)
+}
+
+.av:hover {
+  background:rgba(59,130,246,.2)
+}
+
+.aw2 {
+  background:var(--orange-dim);
+  color:var(--orange)
+}
+
+.aw2:hover {
+  background:rgba(249,115,22,.2)
+}
+
+.aa {
+  background:var(--red-dim);
+  color:var(--red)
+}
+
+.aa:hover {
+  background:rgba(239,68,68,.2)
+}
+
+.donut-wrap {
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:4px 0
+}
+
+.donut {
+  position:relative;
+  width:96px;
+  height:96px;
+  flex-shrink:0
+}
+
+.donut svg {
+  transform:rotate(-90deg)
+}
+
+.donut-center {
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center
+}
+
+.donut-pct {
+  font-size:19px;
+  font-weight:800
+}
+
+.donut-lbl {
+  font-size:8px;
+  color:var(--text2)
+}
+
+.legend {
+  display:flex;
+  flex-direction:column;
+  gap:7px
+}
+
+.leg-i {
+  display:flex;
+  align-items:center;
+  gap:7px
+}
+
+.leg-dot {
+  width:9px;
+  height:9px;
+  border-radius:2px;
+  flex-shrink:0
+}
+
+.leg-name {
+  font-size:10px;
+  color:var(--text2);
+  flex:1
+}
+
+.leg-val {
+  font-size:11px;
+  font-weight:700
+}
+
+.sv-feed-item {
+  display:flex;
+  gap:10px;
+  padding:9px 0;
+  border-bottom:1px solid var(--border)
+}
+
+.sv-feed-item:last-child {
+  border-bottom:none
+}
+
+.sf-time {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--text3);
+  min-width:38px;
+  padding-top:2px
+}
+
+.sf-msg {
+  font-size:11px;
+  color:var(--text);
+  line-height:1.4
+}
+
+.sf-agent {
+  font-size:9px;
+  color:var(--text2);
+  margin-top:2px
+}
+
+.ag-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:9px
+}
+
+@media(max-width:500px) {
+  .ag-grid {
+  grid-template-columns:1fr
+}
+
+}
+
+.ag-card {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:12px
+}
+
+.ag-top {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin-bottom:9px
+}
+
+.ag-av {
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  background:var(--surface3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px;
+  flex-shrink:0
+}
+
+.ag-name {
+  font-size:12px;
+  font-weight:700
+}
+
+.ag-id {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:var(--text2)
+}
+
+.ag-stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:5px;
+  margin-top:7px
+}
+
+.ast {
+  background:var(--surface);
+  border-radius:5px;
+  padding:6px;
+  text-align:center
+}
+
+.ast-val {
+  font-size:14px;
+  font-weight:800
+}
+
+.ast-lbl {
+  font-size:8px;
+  color:var(--text3);
+  margin-top:1px
+}
+
+.pb {
+  width:100%;
+  height:4px;
+  background:var(--surface3);
+  border-radius:3px;
+  overflow:hidden;
+  margin-top:7px
+}
+
+.pf {
+  height:100%;
+  border-radius:3px;
+  transition:width .8s ease
+}
+
+.qf-input2 {
+  width:100%;
+  background:var(--surface2);
+  border:1.5px solid var(--border2);
+  border-radius:8px;
+  padding:8px 12px;
+  color:var(--text);
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:12px;
+  outline:none;
+  transition:border-color .2s;
+  margin-bottom:0
+}
+
+.qf-input2:focus {
+  border-color:var(--blue)
+}
+
+.qf-label2 {
+  font-size:10px;
+  color:var(--text2);
+  font-weight:600;
+  margin-bottom:4px
+}
+
+.qf-row2 {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:10px
+}
+
+.qf-btn2 {
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  background:var(--blue);
+  color:white;
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s;
+  margin-top:8px
+}
+
+.qf-btn2:hover {
+  background:#2563EB
+}
+
+/* ═══════════════════════════════════════ INTERFACE 3 — AGENT TERRAIN ═══════════════════════════════════════ */ 
+#app-agent {
+  background:#F0F4F8;
+  color:#0F172A;
+  font-family:'Outfit',sans-serif;
+  --primary:#1A56DB;
+  --primary-light:#EFF6FF;
+  --primary-dark:#1E40AF;
+  --success:#059669;
+  --success-light:#ECFDF5;
+  --warning:#D97706;
+  --warning-light:#FFFBEB;
+  --danger:#DC2626;
+  --danger-light:#FEF2F2;
+  --surface:#FFFFFF;
+  --surface2:#F7F9FC;
+  --border:#E2E8F0;
+  --border2:#CBD5E1;
+  --text:#0F172A;
+  --text2:#475569;
+  --text3:#94A3B8;
+}
+
+.ag-topbar {
+  background:var(--primary-dark);
+  color:white;
+  padding:0 14px;
+  height:56px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 12px rgba(30,64,175,.4)
+}
+
+.ag-top-left {
+  display:flex;
+  align-items:center;
+  gap:9px
+}
+
+.ag-app-name {
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:.5px
+}
+
+.ag-app-sub {
+  font-size:9px;
+  opacity:.7
+}
+
+.ag-lang {
+  display:flex;
+  gap:3px
+}
+
+.ag-lb {
+  padding:4px 7px;
+  border-radius:5px;
+  font-size:10px;
+  font-weight:600;
+  border:1px solid rgba(255,255,255,.3);
+  background:transparent;
+  color:white;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:'Outfit',sans-serif
+}
+
+.ag-lb.active {
+  background:rgba(255,255,255,.25);
+  border-color:rgba(255,255,255,.6)
+}
+
+.ag-badge2 {
+  display:flex;
+  align-items:center;
+  gap:5px;
+  background:rgba(255,255,255,.12);
+  border-radius:20px;
+  padding:4px 9px 4px 5px;
+  font-size:10px
+}
+
+.ag-av2 {
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:rgba(255,255,255,.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px
+}
+
+.ag-step-wrap {
+  background:white;
+  border-bottom:1px solid var(--border);
+  padding:14px
+}
+
+.ag-stepper {
+  display:flex;
+  align-items:center;
+  max-width:580px;
+  margin:0 auto
+}
+
+.ag-step {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  flex:1;
+  cursor:pointer;
+  position:relative
+}
+
+.ag-step::after {
+  content:'';
+  position:absolute;
+  top:15px;
+  left:50%;
+  width:100%;
+  height:2px;
+  background:var(--border2);
+  z-index:0;
+  transition:background .3s
+}
+
+.ag-step:last-child::after {
+  display:none
+}
+
+.ag-step.done::after {
+  background:var(--success)
+}
+
+.ag-step.active::after {
+  background:var(--primary)
+}
+
+.ag-step-c {
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:700;
+  position:relative;
+  z-index:1;
+  transition:all .3s;
+  border:2px solid var(--border2);
+  background:white;
+  color:var(--text3)
+}
+
+.ag-step.active .ag-step-c {
+  border-color:var(--primary);
+  background:var(--primary);
+  color:white
+}
+
+.ag-step.done .ag-step-c {
+  border-color:var(--success);
+  background:var(--success);
+  color:white
+}
+
+.ag-step-l {
+  font-size:9px;
+  font-weight:500;
+  color:var(--text3);
+  text-align:center;
+  line-height:1.2
+}
+
+.ag-step.active .ag-step-l {
+  color:var(--primary);
+  font-weight:600
+}
+
+.ag-step.done .ag-step-l {
+  color:var(--success)
+}
+
+.ag-content {
+  max-width:640px;
+  margin:0 auto;
+  padding:18px 14px 100px
+}
+
+.ag-gps {
+  background:linear-gradient(135deg,#1A56DB,#1E40AF);
+  border-radius:12px;
+  padding:14px;
+  color:white;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:16px;
+  box-shadow:0 4px 16px rgba(26,86,219,.3)
+}
+
+.ag-gps-icon {
+  font-size:26px
+}
+
+.ag-gps-title {
+  font-size:12px;
+  font-weight:700;
+  margin-bottom:2px
+}
+
+.ag-gps-coords {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  opacity:.85
+}
+
+.ag-gps-btn {
+  background:rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.4);
+  color:white;
+  padding:7px 12px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  transition:all .2s;
+  white-space:nowrap
+}
+
+.ag-gps-btn:hover {
+  background:rgba(255,255,255,.3)
+}
+
+.ag-card {
+  background:white;
+  border-radius:12px;
+  border:1px solid var(--border);
+  box-shadow:0 1px 3px rgba(0,0,0,.08);
+  margin-bottom:14px;
+  overflow:hidden
+}
+
+.ag-card-hdr {
+  padding:12px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:9px;
+  background:var(--surface2)
+}
+
+.ag-card-icon {
+  width:34px;
+  height:34px;
+  border-radius:9px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:17px
+}
+
+.aci-b {
+  background:#EFF6FF
+}
+
+.aci-g {
+  background:#ECFDF5
+}
+
+.aci-o {
+  background:#FFFBEB
+}
+
+.aci-r {
+  background:#FEF2F2
+}
+
+.ag-card-title {
+  font-size:13px;
+  font-weight:700
+}
+
+.ag-card-sub {
+  font-size:10px;
+  color:var(--text3);
+  margin-top:1px
+}
+
+.ag-card-body {
+  padding:16px
+}
+
+.ag-form {
+  display:grid;
+  gap:12px
+}
+
+.ag-form2 {
+  grid-template-columns:1fr 1fr
+}
+
+@media(max-width:460px) {
+  .ag-form2 {
+  grid-template-columns:1fr
+}
+
+}
+
+.ag-field {
+  display:flex;
+  flex-direction:column;
+  gap:4px
+}
+
+.ag-label {
+  font-size:11px;
+  font-weight:600;
+  color:var(--text2)
+}
+
+.ag-req {
+  color:var(--danger)
+}
+
+.ag-input {
+  width:100%;
+  padding:9px 12px;
+  border-radius:8px;
+  border:1.5px solid var(--border2);
+  background:white;
+  font-family:'Outfit',sans-serif;
+  font-size:13px;
+  color:var(--text);
+  transition:all .2s;
+  outline:none;
+  -webkit-appearance:none
+}
+
+.ag-input:focus {
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(26,86,219,.1)
+}
+
+.ag-input::placeholder {
+  color:var(--text3)
+}
+
+textarea.ag-input {
+  resize:vertical;
+  min-height:70px
+}
+
+.ag-loc-row {
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:12px;
+  margin-bottom:9px;
+  position:relative
+}
+
+.ag-loc-num {
+  font-size:9px;
+  font-weight:700;
+  color:var(--primary);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:9px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between
+}
+
+.ag-rm-btn {
+  background:#FEF2F2;
+  color:var(--danger);
+  border:none;
+  border-radius:5px;
+  padding:2px 7px;
+  font-size:10px;
+  cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  font-weight:600
+}
+
+.ag-add-btn {
+  width:100%;
+  padding:11px;
+  border-radius:8px;
+  border:2px dashed var(--border2);
+  background:transparent;
+  font-family:'Outfit',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  color:var(--primary);
+  cursor:pointer;
+  transition:all .2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px
+}
+
+.ag-add-btn:hover {
+  background:var(--primary-light);
+  border-color:var(--primary)
+}
+
+.photo-grid2 {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:9px
+}
+
+.photo-slot2 {
+  aspect-ratio:1;
+  border-radius:8px;
+  border:2px dashed var(--border2);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  cursor:pointer;
+  transition:all .2s;
+  background:var(--surface2);
+  position:relative;
+  overflow:hidden
+}
+
+.photo-slot2:hover {
+  border-color:var(--primary);
+  background:var(--primary-light)
+}
+
+.photo-slot2.filled {
+  border-style:solid;
+  border-color:var(--success)
+}
+
+.ps-icon {
+  font-size:22px
+}
+
+.ps-label {
+  font-size:9px;
+  color:var(--text3);
+  font-weight:500;
+  text-align:center
+}
+
+.ps-check {
+  position:absolute;
+  top:5px;
+  right:5px;
+  background:var(--success);
+  color:white;
+  border-radius:50%;
+  width:18px;
+  height:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px
+}
+
+.status-grid2 {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px
+}
+
+.so {
+  padding:11px 7px;
+  border-radius:8px;
+  border:2px solid var(--border2);
+  cursor:pointer;
+  text-align:center;
+  transition:all .2s;
+  background:white
+}
+
+.so input {
+  display:none
+}
+
+.so .si {
+  font-size:20px;
+  display:block;
+  margin-bottom:3px
+}
+
+.so .sl {
+  font-size:10px;
+  font-weight:600;
+  color:var(--text2)
+}
+
+.so.s-green {
+  --sc:var(--success)
+}
+
+.so.s-orange {
+  --sc:var(--warning)
+}
+
+.so.s-red {
+  --sc:var(--danger)
+}
+
+.so.selected {
+  border-color:var(--sc);
+  background:color-mix(in srgb,var(--sc) 8%,white)
+}
+
+.so.selected .sl {
+  color:var(--sc)
+}
+
+.ag-bottom {
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  z-index:100;
+  background:white;
+  border-top:1px solid var(--border);
+  padding:11px 14px;
+  box-shadow:0 -4px 20px rgba(0,0,0,.08)
+}
+
+.ag-bottom-inner {
+  max-width:640px;
+  margin:0 auto;
+  display:flex;
+  gap:9px
+}
+
+.ag-btn-sec {
+  padding:11px 18px;
+  border-radius:8px;
+  border:1.5px solid var(--border2);
+  background:white;
+  font-family:'Outfit',sans-serif;
+  font-size:13px;
+  font-weight:600;
+  color:var(--text2);
+  cursor:pointer;
+  transition:all .2s
+}
+
+.ag-btn-pri {
+  flex:1;
+  padding:11px;
+  border-radius:8px;
+  border:none;
+  background:var(--primary);
+  font-family:'Outfit',sans-serif;
+  font-size:13px;
+  font-weight:700;
+  color:white;
+  cursor:pointer;
+  transition:all .2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  box-shadow:0 4px 12px rgba(26,86,219,.35)
+}
+
+.ag-btn-pri:hover {
+  background:var(--primary-dark);
+  transform:translateY(-1px)
+}
+
+.ag-success {
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:36px 20px;
+  min-height:55vh
+}
+
+.ag-success.show {
+  display:flex
+}
+
+.ag-success-circle {
+  width:90px;
+  height:90px;
+  border-radius:50%;
+  background:var(--success-light);
+  border:4px solid var(--success);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:42px;
+  margin-bottom:20px;
+  animation:popIn .5s cubic-bezier(.175,.885,.32,1.275)
+}
+
+@keyframes popIn {
+  from {
+  transform:scale(0);
+  opacity:0
+}
+
+to {
+  transform:scale(1);
+  opacity:1
+}
+
+}
+
+.ag-success-title {
+  font-size:22px;
+  font-weight:800;
+  color:var(--success);
+  margin-bottom:7px
+}
+
+.ag-success-id {
+  font-family:'JetBrains Mono',monospace;
+  font-size:15px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  padding:9px 18px;
+  border-radius:7px;
+  margin:14px 0;
+  color:var(--primary);
+  font-weight:600
+}
+
+.ag-success-msg {
+  font-size:13px;
+  color:var(--text2);
+  line-height:1.6;
+  max-width:340px
+}
+
+.ag-btn-new {
+  margin-top:20px;
+  padding:12px 28px;
+  border-radius:8px;
+  border:none;
+  background:var(--primary);
+  font-family:'Outfit',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  color:white;
+  cursor:pointer;
+  box-shadow:0 4px 12px rgba(26,86,219,.35)
+}
+
+.ag-panel {
+  display:none
+}
+
+.ag-panel.active {
+  display:block
+}
+
+/* scroll global */ 
+::-webkit-scrollbar {
+  width:4px
+}
+
+::-webkit-scrollbar-thumb {
+  background:rgba(100,116,139,.3);
+  border-radius:2px
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════ ÉCRAN DE CONNEXION ═══════════ -->
+
+<div id="login-screen">
+  
+<div class="login-box">
+    
+<div class="login-logo">
+      
+<div style="display:flex;justify-content:center;margin-bottom:12px">
+        
+      </div>
+
+      
+<div class="login-title">IRL · DGRK</div>
+
+      
+<div class="login-sub">Système Provincial de Surveillance Fiscale</div>
+
+    </div>
+
+    
+<div class="login-label">Choisissez votre accès</div>
+
+    
+<div class="role-grid">
+      
+<button class="role-btn role-minister" onclick="launch('minister')">
+        <span class="role-icon">🏛️</span>
+        
+<div>
+          
+<div class="role-name">Ministère des Finances</div>
+
+          
+<div class="role-desc">Vue nationale · Toutes les communes · Temps réel</div>
+
+        </div>
+
+        <span style="margin-left:auto;font-size:18px;opacity:.5">→</span>
+      </button>
+
+      
+<button class="role-btn role-supervisor" onclick="launch('supervisor')">
+        <span class="role-icon">📊</span>
+        
+<div>
+          
+<div class="role-name">Superviseur de Centre</div>
+
+          
+<div class="role-desc">Commune de Gombe · Gestion agents & rapports</div>
+
+        </div>
+
+        <span style="margin-left:auto;font-size:18px;opacity:.5">→</span>
+      </button>
+
+      
+<button class="role-btn role-agent" onclick="launch('agent')">
+        <span class="role-icon">📱</span>
+        
+<div>
+          
+<div class="role-name">Agent de Terrain</div>
+
+          
+<div class="role-desc">Enregistrement bailleurs, parcelles, locataires</div>
+
+        </div>
+
+        <span style="margin-left:auto;font-size:18px;opacity:.5">→</span>
+      </button>
+
+      
+<button class="role-btn role-bailleur" onclick="launch('bailleur')">
+        <span class="role-icon">🏠</span>
+        
+<div>
+          
+<div class="role-name">Espace Bailleur</div>
+
+          
+<div class="role-desc">Paiement impôts · Mobile Money · Bancaire · Historique</div>
+
+        </div>
+
+        <span style="margin-left:auto;font-size:18px;opacity:.5">→</span>
+      </button>
+
+    </div>
+
+    
+<div class="login-footer">v2.1.0 · © IRL RDC 2026 · DGRK KINSHASA</div>
+
+  </div>
+
+</div>
+
+
+<!-- Bouton retour -->
+
+<button class="back-fab" id="backFab" onclick="goBack()">← Changer de rôle</button>
+
+
+<!-- ═══════════ APP MINISTRE ═══════════ -->
+
+<div class="app-screen" id="app-minister">
+  
+<div class="m-header">
+    
+<div style="display:flex;align-items:center;gap:12px">
+      
+      
+<div>
+<div class="m-brand-title">IRL · RDC</div>
+
+<div class="m-brand-sub">Tableau de Bord Provincial — Ministère des Finances</div>
+</div>
+
+    </div>
+
+    
+<div class="m-center">DIRECTION GÉNÉRALE DES RECETTES DE KINSHASA<br><span style="color:#7A90B0" id="m-clock">--:--:--  |  31 Mars 2026</span></div>
+
+    
+<div class="m-live">
+<div class="m-dot"></div>
+TEMPS RÉEL</div>
+
+  </div>
+
+  
+<div class="m-stats">
+    
+<div class="m-stat">
+<div class="m-stat-lbl">Communes Supervisées</div>
+
+<div class="m-stat-val or">24</div>
+
+<div class="m-stat-chg">▲ Phase pilote</div>
+</div>
+
+    
+<div class="m-stat">
+<div class="m-stat-lbl">Bailleurs Enregistrés</div>
+
+<div class="m-stat-val cy">12 847</div>
+
+<div class="m-stat-chg">▲ +142 nouvelles inscriptions</div>
+</div>
+
+    
+<div class="m-stat">
+<div class="m-stat-lbl">Locataires Recensés</div>
+
+<div class="m-stat-val or">89 340</div>
+
+<div class="m-stat-chg">▲ Mise à jour 3h ago</div>
+</div>
+
+    
+<div class="m-stat">
+<div class="m-stat-lbl">Taux de Conformité</div>
+
+<div class="m-stat-val vt">68.4%</div>
+
+<div class="m-stat-chg">▲ +4.2% vs mois dernier</div>
+</div>
+
+    
+<div class="m-stat">
+<div class="m-stat-lbl">Dossiers en Alerte</div>
+<div class="m-stat-val rg">4 073</div>
+<div class="m-stat-chg neg">▼ Non-conformes</div>
+</div>
+<div class="m-stat" style="border-left:2px solid #D4AF37">
+<div class="m-stat-lbl">Total Encaissé — Mars 2026</div>
+<div class="m-stat-val or" id="m-total-enc">$847 320</div>
+<div class="m-stat-chg">▲ +$124 800 cette semaine</div>
+</div>
+  </div>
+
+  
+<div class="m-main">
+    
+<div class="m-col m-col-left">
+      
+<div class="m-panel-hdr">
+<div class="m-panel-title">▣ Communes</div>
+</div>
+
+      
+<div id="m-commune-list"></div>
+
+    </div>
+
+    
+<div class="m-col m-center-col">
+      
+<div class="m-detail-hdr">
+        
+<div class="m-detail-title" id="m-det-title">GOMBE</div>
+
+        
+<div class="m-detail-sub" id="m-det-sub">KINSHASA · Province de Kinshasa · Code COM-001</div>
+
+      </div>
+
+      
+<div class="m-kpis">
+        
+<div class="m-kpi">
+<div class="m-kpi-val cy" id="mk1">347</div>
+
+<div class="m-kpi-lbl">Bailleurs</div>
+</div>
+
+        
+<div class="m-kpi">
+<div class="m-kpi-val or" id="mk2">2 814</div>
+
+<div class="m-kpi-lbl">Locataires</div>
+</div>
+
+        
+<div class="m-kpi">
+<div class="m-kpi-val vt" id="mk3">241</div>
+
+<div class="m-kpi-lbl">Impôts Payés</div>
+</div>
+
+        
+<div class="m-kpi">
+<div class="m-kpi-val rg" id="mk4">106</div>
+<div class="m-kpi-lbl">Non-Conformes</div>
+</div>
+<div class="m-kpi" style="border-top:2px solid #D4AF37">
+<div class="m-kpi-val or" id="mk5">$72 640</div>
+<div class="m-kpi-lbl">Encaissé ce mois</div>
+</div>
+<div class="m-kpi" style="border-top:2px solid #00E67A">
+<div class="m-kpi-val vt" id="mk6">$847 320</div>
+<div class="m-kpi-lbl">Total 2026</div>
+</div>
+
+      </div>
+
+      
+<div class="m-sec-title">Registre des Bailleurs</div>
+
+      
+<div class="m-tbl-wrap">
+        
+<div class="m-tbl-row m-tbl-hdr">
+<div>#</div>
+
+<div>Bailleur</div>
+
+<div style="text-align:center">Parcelles</div>
+
+<div style="text-align:right">Loyers</div>
+
+<div>Statut</div>
+
+<div>Action</div>
+</div>
+
+        
+<div id="m-bailleurs-list"></div>
+
+      </div>
+
+    </div>
+
+    
+<div class="m-col m-col-right">
+      
+<div class="m-panel-hdr">
+<div class="m-panel-title">⚡ Alertes</div>
+
+<div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#FF3A5C">● 12</div>
+</div>
+
+      
+<div id="m-alertes-list"></div>
+
+    </div>
+
+  </div>
+
+  
+<div class="m-footer">
+    
+<div style="display:flex;align-items:center;gap:6px">
+<div class="m-f-dot"></div>
+Connexion Active</div>
+
+    
+<div>API DGRK · Latence: 42ms</div>
+
+    
+<div>89,340 enregistrements</div>
+
+    
+<div>↻ Sync: <span id="m-countdown">00:45</span></div>
+
+  </div>
+
+</div>
+
+<!-- ═══════════ APP SUPERVISEUR ═══════════ -->
+
+<div class="app-screen" id="app-supervisor">
+  
+<nav class="sv-nav">
+    
+<div class="sv-badge">S</div>
+
+    
+<div>
+<div class="sv-name">IRL</div>
+
+<div class="sv-sub">Superviseur Centre</div>
+</div>
+
+    
+<div class="sv-div"></div>
+
+    
+<div class="sv-comm">📍 Commune de Gombe — Kinshasa</div>
+
+    
+<div class="sv-tabs">
+      
+<button class="sv-tab active" onclick="svTab('vue',this)">📊 Vue d'ensemble</button>
+
+      
+<button class="sv-tab" onclick="svTab('bailleurs',this)">🏘️ Bailleurs</button>
+
+      
+<button class="sv-tab" onclick="svTab('agents',this)">👮 Agents</button>
+
+      
+<button class="sv-tab" onclick="svTab('rapports',this)">📋 Rapports</button>
+
+    </div>
+
+    
+<div class="sv-right">
+      
+<button class="sv-sync">
+<div class="sv-sdot"></div>
+Sync actif</button>
+
+      
+<div class="sv-chip">
+<div style="width:7px;height:7px;border-radius:50%;background:var(--green)"></div>
+SUP-001</div>
+
+    </div>
+
+  </nav>
+
+  
+<div class="sv-panel active" id="sv-vue">
+    
+<div class="sv-kpi-row">
+      
+<div class="sv-kpi cb">
+<div class="sv-kpi-icon">🏘️</div>
+
+<div class="sv-kpi-val b">347</div>
+
+<div class="sv-kpi-lbl">Bailleurs enregistrés</div>
+
+<div class="sv-kpi-delta du">▲ +12 ce mois</div>
+</div>
+
+      
+<div class="sv-kpi cg">
+<div class="sv-kpi-icon">👥</div>
+
+<div class="sv-kpi-val g">2 814</div>
+
+<div class="sv-kpi-lbl">Locataires recensés</div>
+
+<div class="sv-kpi-delta du">▲ +89 ce mois</div>
+</div>
+
+      
+<div class="sv-kpi cv">
+<div class="sv-kpi-icon">✅</div>
+
+<div class="sv-kpi-val v">241</div>
+
+<div class="sv-kpi-lbl">Impôts à jour</div>
+
+<div class="sv-kpi-delta du">▲ 69.4%</div>
+</div>
+
+      
+<div class="sv-kpi cr">
+<div class="sv-kpi-icon">⚠️</div>
+
+<div class="sv-kpi-val r">106</div>
+
+<div class="sv-kpi-lbl">Dossiers en alerte</div>
+
+<div class="sv-kpi-delta dd">▼ -8 vs hier</div>
+</div>
+
+    </div>
+
+    
+<div class="sv-grid3" style="margin-bottom:12px">
+      
+<div class="sv-box">
+        
+<div class="sv-box-hdr">
+<div>
+<div class="sv-box-title">🎯 Taux de Conformité</div>
+
+<div class="sv-box-sub">Bailleurs avec impôts à jour</div>
+</div>
+<span class="sv-badge2 bg">Gombe</span></div>
+
+        
+<div class="sv-box-body">
+          
+<div class="donut-wrap">
+            
+<div class="donut"><svg width="96" height="96" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="14"/><circle cx="50" cy="50" r="38" fill="none" stroke="#EF4444" stroke-width="14" stroke-dasharray="238.76" stroke-dashoffset="0" opacity=".5"/><circle cx="50" cy="50" r="38" fill="none" stroke="#10B981" stroke-width="14" stroke-dasharray="238.76" stroke-dashoffset="72" stroke-linecap="round"/></svg>
+<div class="donut-center">
+<div class="donut-pct">69%</div>
+
+<div class="donut-lbl">Conformes</div>
+</div>
+</div>
+
+            
+<div class="legend">
+              
+<div class="leg-i">
+<div class="leg-dot" style="background:var(--green)"></div>
+<span class="leg-name">À jour</span><span class="leg-val">241</span></div>
+
+              
+<div class="leg-i">
+<div class="leg-dot" style="background:var(--orange)"></div>
+<span class="leg-name">Partiel</span><span class="leg-val">47</span></div>
+
+              
+<div class="leg-i">
+<div class="leg-dot" style="background:var(--red)"></div>
+<span class="leg-name">Non-payé</span><span class="leg-val">59</span></div>
+
+            </div>
+
+          </div>
+
+          
+<div style="margin-top:12px">
+<div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text2);margin-bottom:4px"><span>Objectif mensuel</span><span style="color:var(--gold);font-weight:700">80%</span></div>
+
+<div class="pb">
+<div class="pf" style="width:69%;background:linear-gradient(90deg,var(--green),var(--cyan2))"></div>
+</div>
+</div>
+
+        </div>
+
+      </div>
+
+      
+<div class="sv-box">
+        
+<div class="sv-box-hdr">
+<div class="sv-box-title">⚡ Alertes Actives</div>
+<span class="sv-badge2 br">● 8 urgentes</span></div>
+
+        
+<div class="sv-box-body" style="padding:8px 14px">
+          
+<div class="sv-feed-item">
+<div class="sf-time">09:42</div>
+
+<div style="font-size:15px">🚨</div>
+
+<div>
+<div class="sf-msg">KALUBI Invest — 3 mois impayés · <strong style="color:var(--red)">$7,200</strong></div>
+
+<div class="sf-agent">AGT-2047 · il y a 8 min</div>
+</div>
+</div>
+
+          
+<div class="sv-feed-item">
+<div class="sf-time">09:15</div>
+
+<div style="font-size:15px">⚠️</div>
+
+<div>
+<div class="sf-msg">NKAMBA Frères — Déclaration incomplète</div>
+
+<div class="sf-agent">AGT-2051 · En attente</div>
+</div>
+</div>
+
+          
+<div class="sv-feed-item">
+<div class="sf-time">08:30</div>
+
+<div style="font-size:15px">🔍</div>
+
+<div>
+<div class="sf-msg">MULANGA & Fils — 3 parcelles non déclarées</div>
+
+<div class="sf-agent">Détection automatique GPS</div>
+</div>
+</div>
+
+          
+<div class="sv-feed-item">
+<div class="sf-time">07:55</div>
+
+<div style="font-size:15px">📬</div>
+
+<div>
+<div class="sf-msg">Relances SMS envoyées — 23 bailleurs</div>
+
+<div class="sf-agent">Système automatique</div>
+</div>
+</div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    
+<div class="sv-box">
+      
+<div class="sv-box-hdr">
+<div>
+<div class="sv-box-title">📡 Activité Agents — Temps Réel</div>
+
+<div class="sv-box-sub">Enregistrements des 2 dernières heures</div>
+</div>
+<span class="sv-badge2 bb">6 agents actifs</span></div>
+
+      
+<div style="overflow-x:auto">
+<table class="sv-tbl">
+<thead>
+<tr>
+<th>Agent</th>
+
+<th>Heure</th>
+
+<th>Action</th>
+
+<th>Bailleur</th>
+
+<th>Statut Fiscal</th>
+
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="sv-activity-body"></tbody>
+</table>
+</div>
+
+    </div>
+
+  </div>
+
+  
+<div class="sv-panel" id="sv-bailleurs">
+    
+<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      
+<input class="qf-input2" placeholder="🔍 Rechercher..." style="max-width:260px;margin-bottom:0">
+      
+<select class="qf-input2" style="max-width:150px;margin-bottom:0">
+<option>Tous statuts</option>
+
+<option>À jour</option>
+
+<option>Partiel</option>
+
+<option>Non-payé</option>
+</select>
+
+    </div>
+
+    
+<div class="sv-box">
+<div class="sv-box-hdr">
+<div>
+<div class="sv-box-title">🏘️ Registre Bailleurs — Commune de Gombe</div>
+
+<div class="sv-box-sub">347 bailleurs</div>
+</div>
+
+<button class="sv-sync" style="font-size:10px">⬇ CSV</button>
+</div>
+
+<div style="overflow-x:auto">
+<table class="sv-tbl">
+<thead>
+<tr>
+<th>ID</th>
+
+<th>Bailleur</th>
+
+<th>Parcelles</th>
+
+<th>Locataires</th>
+
+<th>Loyers/mois</th>
+
+<th>Statut</th>
+
+<th>MAJ</th>
+
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody id="sv-bailleurs-body"></tbody>
+</table>
+</div>
+</div>
+
+  </div>
+
+  
+<div class="sv-panel" id="sv-agents">
+    
+<div class="sv-kpi-row" style="grid-template-columns:repeat(3,1fr)">
+      
+<div class="sv-kpi cb">
+<div class="sv-kpi-icon">👮</div>
+
+<div class="sv-kpi-val b">8</div>
+
+<div class="sv-kpi-lbl">Agents actifs aujourd'hui</div>
+</div>
+
+      
+<div class="sv-kpi cv">
+<div class="sv-kpi-icon">✅</div>
+
+<div class="sv-kpi-val v">47</div>
+
+<div class="sv-kpi-lbl">Enregistrements aujourd'hui</div>
+</div>
+
+      
+<div class="sv-kpi cg">
+<div class="sv-kpi-icon">📍</div>
+
+<div class="sv-kpi-val g">12</div>
+
+<div class="sv-kpi-lbl">Zones couvertes</div>
+</div>
+
+    </div>
+
+    
+<div class="sv-box">
+<div class="sv-box-hdr">
+<div class="sv-box-title">👮 Équipe d'agents</div>
+</div>
+
+<div class="sv-box-body">
+<div class="ag-grid" id="sv-agents-grid"></div>
+</div>
+</div>
+
+  </div>
+
+  
+<div class="sv-panel" id="sv-rapports">
+    
+<div class="sv-grid2">
+      
+<div class="sv-box">
+<div class="sv-box-hdr">
+<div>
+<div class="sv-box-title">📋 Générer un Rapport</div>
+
+<div class="sv-box-sub">Pour transmission au Ministère</div>
+</div>
+</div>
+
+<div class="sv-box-body">
+        
+<div style="margin-bottom:10px">
+<div class="qf-label2">Type de rapport</div>
+
+<select class="qf-input2">
+<option>Rapport mensuel de conformité</option>
+
+<option>Rapport de recouvrement fiscal</option>
+
+<option>Rapport d'alertes et infractions</option>
+</select>
+</div>
+
+        
+<div class="qf-row2">
+<div>
+<div class="qf-label2">Du</div>
+
+<input class="qf-input2" type="date" value="2026-03-01"></div>
+
+<div>
+<div class="qf-label2">Au</div>
+
+<input class="qf-input2" type="date" value="2026-03-31"></div>
+</div>
+
+        
+<div style="margin-bottom:10px">
+<div class="qf-label2">Format</div>
+
+<select class="qf-input2">
+<option>PDF officiel</option>
+
+<option>Excel</option>
+
+<option>CSV</option>
+</select>
+</div>
+
+        
+<button class="qf-btn2" onclick="this.textContent='⏳ Génération...';setTimeout(()=>this.textContent='✅ Rapport prêt !',2000)">📄 Générer</button>
+
+      </div>
+</div>
+
+      
+<div class="sv-box">
+<div class="sv-box-hdr">
+<div class="sv-box-title">📁 Rapports Récents</div>
+</div>
+
+<div style="overflow-x:auto">
+<table class="sv-tbl">
+<thead>
+<tr>
+<th>Rapport</th>
+
+<th>Date</th>
+
+<th>Statut</th>
+
+<th></th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td class="nm">Conformité Fév 2026</td>
+
+<td class="mono">01/03/26</td>
+
+<td><span class="pill p-ok">✓ Envoyé</span></td>
+
+<td>
+<button class="sv-act av">↓</button>
+</td>
+</tr>
+
+<tr>
+<td class="nm">Recouvrement Jan 2026</td>
+
+<td class="mono">01/02/26</td>
+
+<td><span class="pill p-ok">✓ Envoyé</span></td>
+
+<td>
+<button class="sv-act av">↓</button>
+</td>
+</tr>
+
+<tr>
+<td class="nm">Infractions Q4 2025</td>
+
+<td class="mono">15/01/26</td>
+
+<td><span class="pill p-ok">✓ Validé</span></td>
+
+<td>
+<button class="sv-act av">↓</button>
+</td>
+</tr>
+
+<tr>
+<td class="nm">Inscriptions Déc 2025</td>
+
+<td class="mono">02/01/26</td>
+
+<td><span class="pill p-warn">⏳ Révision</span></td>
+
+<td>
+<button class="sv-act aw2">Voir</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ═══════════ APP AGENT ═══════════ -->
+
+<div class="app-screen" id="app-agent">
+  
+<div class="ag-topbar">
+    
+<div class="ag-top-left">
+      
+      
+<div>
+<div class="ag-app-name">IRL Agent</div>
+
+<div class="ag-app-sub" id="ag-sub">Enregistrement Bailleur</div>
+</div>
+
+    </div>
+
+    
+<div class="ag-lang">
+      
+<button class="ag-lb active" onclick="agLang('fr',this)">FR</button>
+
+      
+<button class="ag-lb" onclick="agLang('ln',this)">LN</button>
+
+      
+<button class="ag-lb" onclick="agLang('sw',this)">SW</button>
+
+      
+<button class="ag-lb" onclick="agLang('en',this)">EN</button>
+
+    </div>
+
+    
+<div class="ag-badge2">
+<div class="ag-av2">👤</div>
+<span>AGT-2047</span></div>
+
+  </div>
+
+  
+<div class="ag-step-wrap">
+    
+<div class="ag-stepper">
+      
+<div class="ag-step active" id="ags1">
+<div class="ag-step-c" id="agsc1">1</div>
+
+<div class="ag-step-l">Bailleur</div>
+</div>
+
+      
+<div class="ag-step" id="ags2">
+<div class="ag-step-c" id="agsc2">2</div>
+
+<div class="ag-step-l">Parcelles</div>
+</div>
+
+      
+<div class="ag-step" id="ags3">
+<div class="ag-step-c" id="agsc3">3</div>
+
+<div class="ag-step-l">Locataires</div>
+</div>
+
+      
+<div class="ag-step" id="ags4">
+<div class="ag-step-c" id="agsc4">4</div>
+
+<div class="ag-step-l">Photos</div>
+</div>
+
+      
+<div class="ag-step" id="ags5">
+<div class="ag-step-c" id="agsc5">5</div>
+
+<div class="ag-step-l">Impôts</div>
+</div>
+
+    </div>
+
+  </div>
+
+  
+<div class="ag-content">
+    
+<div class="ag-gps">
+      
+<div class="ag-gps-icon">📍</div>
+
+      
+<div style="flex:1">
+<div class="ag-gps-title">Position GPS capturée</div>
+
+<div class="ag-gps-coords" id="ag-coords">-4.3217° S, 15.3222° E · Commune de Gombe</div>
+</div>
+
+      
+<button class="ag-gps-btn" onclick="agRefreshGPS()">↻ Actualiser</button>
+
+    </div>
+
+    <!-- ÉTAPE 1 -->
+    
+<div class="ag-panel active" id="agp1">
+      
+<div class="ag-card">
+<div class="ag-card-hdr">
+<div class="ag-card-icon aci-b">👤</div>
+
+<div>
+<div class="ag-card-title">Identité du Bailleur</div>
+
+<div class="ag-card-sub">Informations personnelles du propriétaire</div>
+</div>
+</div>
+
+      
+<div class="ag-card-body">
+<div class="ag-form">
+        
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">Nom <span class="ag-req">*</span></label>
+
+<input class="ag-input" placeholder="Ex: MWAMBA"></div>
+
+<div class="ag-field">
+<label class="ag-label">Prénom <span class="ag-req">*</span></label>
+
+<input class="ag-input" placeholder="Ex: Jean-Pierre"></div>
+</div>
+
+        
+<div class="ag-field">
+<label class="ag-label">N° Pièce d'identité <span class="ag-req">*</span></label>
+
+<input class="ag-input" placeholder="CD-2024-0847321" style="font-family:'JetBrains Mono',monospace"></div>
+
+        
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">Téléphone</label>
+
+<input class="ag-input" placeholder="+243 8X..." type="tel"></div>
+
+<div class="ag-field">
+<label class="ag-label">Sexe</label>
+
+<select class="ag-input">
+<option>—</option>
+
+<option>Masculin</option>
+
+<option>Féminin</option>
+</select>
+</div>
+</div>
+
+        
+<div class="ag-field">
+<label class="ag-label">Commune de résidence <span class="ag-req">*</span></label>
+
+<select class="ag-input">
+<option>— Sélectionner —</option>
+
+<option>Gombe</option>
+
+<option>Limete</option>
+
+<option>Lemba</option>
+
+<option>Kasa-Vubu</option>
+
+<option>Ngaliema</option>
+
+<option>Ndjili</option>
+
+<option>Matete</option>
+
+<option>Selembao</option>
+</select>
+</div>
+
+        
+<div class="ag-field">
+<label class="ag-label">Adresse complète</label>
+
+<textarea class="ag-input" placeholder="Av. de la Paix, N° 12..."></textarea>
+</div>
+
+      </div>
+</div>
+</div>
+
+    </div>
+
+    <!-- ÉTAPE 2 -->
+    
+<div class="ag-panel" id="agp2">
+      
+<div class="ag-card">
+<div class="ag-card-hdr">
+<div class="ag-card-icon aci-o">🏘️</div>
+
+<div>
+<div class="ag-card-title">Parcelles & Propriétés</div>
+
+<div class="ag-card-sub">Biens immobiliers mis en location</div>
+</div>
+</div>
+
+      
+<div class="ag-card-body">
+        
+<div id="ag-parc-list">
+<div class="ag-loc-row">
+<div class="ag-loc-num"><span>📌 Parcelle #1</span></div>
+
+<div class="ag-form">
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">N° Parcelle <span class="ag-req">*</span></label>
+
+<input class="ag-input" placeholder="P-2024-00412" style="font-family:'JetBrains Mono',monospace"></div>
+
+<div class="ag-field">
+<label class="ag-label">Type</label>
+
+<select class="ag-input">
+<option>Maison</option>
+
+<option>Appartement</option>
+
+<option>Studio</option>
+
+<option>Villa</option>
+
+<option>Commerce</option>
+</select>
+</div>
+</div>
+
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">Surface (m²)</label>
+
+<input class="ag-input" type="number" placeholder="120"></div>
+
+<div class="ag-field">
+<label class="ag-label">Loyer mensuel (USD)</label>
+
+<input class="ag-input" type="number" placeholder="350"></div>
+</div>
+
+<div class="ag-field">
+<label class="ag-label">Adresse de la parcelle</label>
+
+<input class="ag-input" placeholder="Av. Kasa-Vubu, N° 47..."></div>
+</div>
+</div>
+</div>
+
+        
+<button class="ag-add-btn" onclick="agAddParc()">＋ Ajouter une parcelle</button>
+
+      </div>
+</div>
+
+    </div>
+
+    <!-- ÉTAPE 3 -->
+    
+<div class="ag-panel" id="agp3">
+      
+<div class="ag-card">
+<div class="ag-card-hdr">
+<div class="ag-card-icon aci-g">👥</div>
+
+<div>
+<div class="ag-card-title">Locataires</div>
+
+<div class="ag-card-sub">Personnes occupant les logements</div>
+</div>
+</div>
+
+      
+<div class="ag-card-body">
+        
+<div id="ag-loc-list">
+<div class="ag-loc-row">
+<div class="ag-loc-num"><span>👤 Locataire #1</span></div>
+
+<div class="ag-form">
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">Nom complet</label>
+
+<input class="ag-input" placeholder="Nom & Prénom"></div>
+
+<div class="ag-field">
+<label class="ag-label">Téléphone</label>
+
+<input class="ag-input" placeholder="+243..."></div>
+</div>
+
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">Parcelle occupée</label>
+
+<select class="ag-input">
+<option>Parcelle #1</option>
+</select>
+</div>
+
+<div class="ag-field">
+<label class="ag-label">Depuis</label>
+
+<input class="ag-input" type="date"></div>
+</div>
+</div>
+</div>
+</div>
+
+        
+<button class="ag-add-btn" onclick="agAddLoc()">＋ Ajouter un locataire</button>
+
+      </div>
+</div>
+
+    </div>
+
+    <!-- ÉTAPE 4 -->
+    
+<div class="ag-panel" id="agp4">
+      
+<div class="ag-card">
+<div class="ag-card-hdr">
+<div class="ag-card-icon aci-o">📷</div>
+
+<div>
+<div class="ag-card-title">Documentation Photo</div>
+
+<div class="ag-card-sub">Preuves visuelles des propriétés</div>
+</div>
+</div>
+
+      
+<div class="ag-card-body">
+        
+<p style="font-size:11px;color:var(--text2);margin-bottom:12px">Prenez au moins 3 photos : façade, intérieur et environnement du bien.</p>
+
+        
+<div class="photo-grid2">
+          
+<div class="photo-slot2" onclick="agPhoto(this)"><span class="ps-icon">🏠</span><span class="ps-label">Façade</span></div>
+
+          
+<div class="photo-slot2" onclick="agPhoto(this)"><span class="ps-icon">🛏️</span><span class="ps-label">Intérieur</span></div>
+
+          
+<div class="photo-slot2" onclick="agPhoto(this)"><span class="ps-icon">🗺️</span><span class="ps-label">Environnement</span></div>
+
+          
+<div class="photo-slot2" onclick="agPhoto(this)"><span class="ps-icon">📄</span><span class="ps-label">Titre foncier</span></div>
+
+          
+<div class="photo-slot2" onclick="agPhoto(this)"><span class="ps-icon">🪪</span><span class="ps-label">CNI Bailleur</span></div>
+
+          
+<div class="photo-slot2" onclick="agPhoto(this)"><span class="ps-icon">➕</span><span class="ps-label">Autre</span></div>
+
+        </div>
+
+      </div>
+</div>
+
+    </div>
+
+    <!-- ÉTAPE 5 -->
+    
+<div class="ag-panel" id="agp5">
+      
+<div class="ag-card">
+<div class="ag-card-hdr">
+<div class="ag-card-icon aci-r">💰</div>
+
+<div>
+<div class="ag-card-title">Statut Fiscal</div>
+
+<div class="ag-card-sub">Situation des impôts locatifs</div>
+</div>
+</div>
+
+      
+<div class="ag-card-body">
+<div class="ag-form">
+        
+<div class="ag-field">
+<label class="ag-label">Statut de paiement des impôts</label>
+
+          
+<div class="status-grid2">
+            
+<label class="so s-green">
+<input type="radio" name="statut" onchange="agSelectStatus(this)"><span class="si">✅</span><span class="sl">À jour</span></label>
+
+            
+<label class="so s-orange">
+<input type="radio" name="statut" onchange="agSelectStatus(this)"><span class="si">⚠️</span><span class="sl">Partiel</span></label>
+
+            
+<label class="so s-red">
+<input type="radio" name="statut" onchange="agSelectStatus(this)"><span class="si">🚫</span><span class="sl">Non-payé</span></label>
+
+          </div>
+
+        </div>
+
+        
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">Dernier paiement</label>
+
+<input class="ag-input" type="date"></div>
+
+<div class="ag-field">
+<label class="ag-label">Montant dû (USD)</label>
+
+<input class="ag-input" type="number" placeholder="0.00"></div>
+</div>
+
+        
+<div class="ag-field">
+<label class="ag-label">N° Contribuable DGRK</label>
+
+<input class="ag-input" placeholder="DGRK-KIN-XXXX-XXXX" style="font-family:'JetBrains Mono',monospace"></div>
+
+        
+<div class="ag-field">
+<label class="ag-label">Notes de l'agent</label>
+
+<textarea class="ag-input" placeholder="Observations particulières..."></textarea>
+</div>
+
+      </div>
+</div>
+</div>
+
+    </div>
+
+    <!-- SUCCÈS -->
+    
+<div class="ag-success" id="ag-success">
+      
+<div class="ag-success-circle">✓</div>
+
+      
+<div class="ag-success-title">Enregistrement réussi !</div>
+
+      
+<div class="ag-success-id" id="ag-success-id">BLR-KIN-2026-08472</div>
+
+      
+<div class="ag-success-msg">Le dossier bailleur a été soumis au serveur national IRL et sera visible sur le tableau de bord du Ministère dans les prochaines minutes.</div>
+
+      
+<button class="ag-btn-new" onclick="agReset()">＋ Nouvel enregistrement</button>
+
+    </div>
+
+  </div>
+
+  
+<div class="ag-bottom" id="ag-bottom">
+    
+<div class="ag-bottom-inner">
+      
+<button class="ag-btn-sec" id="ag-btn-prev" style="display:none" onclick="agPrev()">← Retour</button>
+
+      
+<button class="ag-btn-pri" onclick="agNext()"><span id="ag-btn-next-lbl">Suivant →</span></button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  // ══════════════════════════════
+// NAVIGATION PRINCIPALE
+// ══════════════════════════════
+function launch(role) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.querySelectorAll('.app-screen').forEach(a => a.classList.remove('active'));
+  document.getElementById('app-' + role).classList.add('active');
+  document.getElementById('backFab').classList.add('visible');
+  if (role === 'minister') initMinister();
+  if (role === 'supervisor') initSupervisor();
+  window.scrollTo(0,0);
+}
+function goBack() {
+  document.getElementById('login-screen').style.display = 'flex';
+  document.querySelectorAll('.app-screen').forEach(a => a.classList.remove('active'));
+  document.getElementById('backFab').classList.remove('visible');
+}
+
+// ══════════════════════════════
+// INTERFACE MINISTRE
+// ══════════════════════════════
+const mCommunes = [
+  {name:"Gombe",          prov:"Kinshasa",     code:"COM-001",b:347,l:2814,p:241,n:106, enc:72640,  total:218000},
+  {name:"Limete",         prov:"Kinshasa",     code:"COM-002",b:823,l:6421,p:601,n:222, enc:148200, total:441000},
+  {name:"Lemba",          prov:"Kinshasa",     code:"COM-003",b:512,l:4180,p:298,n:214, enc:68400,  total:195000},
+  {name:"Kasa-Vubu",      prov:"Kinshasa",     code:"COM-004",b:389,l:3102,p:312,n:77,  enc:82100,  total:246000},
+  {name:"Ngaliema",       prov:"Kinshasa",     code:"COM-005",b:621,l:4980,p:387,n:234, enc:93200,  total:279000},
+  {name:"Ndjili",         prov:"Kinshasa",     code:"COM-006",b:744,l:5930,p:390,n:354, enc:74800,  total:212000},
+  {name:"Matete",         prov:"Kinshasa",     code:"COM-007",b:430,l:3450,p:310,n:120, enc:61200,  total:184000},
+  {name:"Selembao",       prov:"Kinshasa",     code:"COM-008",b:298,l:2380,p:187,n:111, enc:42600,  total:127000},
+  {name:"Bumbu",          prov:"Kinshasa",     code:"COM-009",b:267,l:2136,p:168,n:99,  enc:38400,  total:115000},
+  {name:"Kisenso",        prov:"Kinshasa",     code:"COM-010",b:312,l:2496,p:198,n:114, enc:45200,  total:136000},
+  {name:"Masina",         prov:"Kinshasa",     code:"COM-011",b:534,l:4272,p:320,n:214, enc:61800,  total:185000},
+  {name:"Mont-Ngafula",   prov:"Kinshasa",     code:"COM-012",b:289,l:2312,p:176,n:113, enc:40200,  total:121000},
+  {name:"Kalamu",         prov:"Kinshasa",     code:"COM-013",b:411,l:3288,p:267,n:144, enc:58400,  total:175000},
+  {name:"Kintambo",       prov:"Kinshasa",     code:"COM-014",b:198,l:1584,p:142,n:56,  enc:31200,  total:93000},
+  {name:"Lingwala",       prov:"Kinshasa",     code:"COM-015",b:176,l:1408,p:128,n:48,  enc:28800,  total:86000},
+  {name:"Bandalungwa",    prov:"Kinshasa",     code:"COM-016",b:287,l:2296,p:198,n:89,  enc:44200,  total:133000},
+  {name:"Ngiri-Ngiri",    prov:"Kinshasa",     code:"COM-017",b:243,l:1944,p:162,n:81,  enc:36800,  total:110000},
+  {name:"Barumbu",        prov:"Kinshasa",     code:"COM-018",b:189,l:1512,p:124,n:65,  enc:27200,  total:82000},
+  {name:"Kinshasa-Ville", prov:"Kinshasa",     code:"COM-019",b:156,l:1248,p:108,n:48,  enc:23400,  total:70000},
+  {name:"Makala",         prov:"Kinshasa",     code:"COM-020",b:334,l:2672,p:210,n:124, enc:48200,  total:145000},
+  {name:"Maluku",         prov:"Kinshasa",     code:"COM-021",b:223,l:1784,p:142,n:81,  enc:31800,  total:95000},
+  {name:"Nsele",          prov:"Kinshasa",     code:"COM-022",b:198,l:1584,p:118,n:80,  enc:26400,  total:79000},
+  {name:"Kimbaseke",      prov:"Kinshasa",     code:"COM-023",b:412,l:3296,p:248,n:164, enc:56200,  total:169000},
+  {name:"Tshangu",        prov:"Kinshasa",     code:"COM-024",b:376,l:3008,p:224,n:152, enc:51200,  total:154000},
+];
+const mBailleurs = [
+  {id:"KIN-0847",name:"MWAMBA Jean-Pierre",parc:4,loyer:3200,statut:"ok"},
+  {id:"KIN-1203",name:"KABILA Anastasie Mireille",parc:2,loyer:1800,statut:"ok"},
+  {id:"KIN-0312",name:"LUMUMBA Investment SARL",parc:8,loyer:7400,statut:"bad"},
+  {id:"KIN-2041",name:"TSHISEKEDI Maison",parc:3,loyer:2600,statut:"warn"},
+  {id:"KIN-0089",name:"MOBUTU & Fils Immobilier",parc:12,loyer:10200,statut:"bad"},
+  {id:"KIN-1567",name:"KAYUMBA Propriétés",parc:5,loyer:4100,statut:"ok"},
+];
+const mAlertes = [
+  {type:"paiement",msg:"✅ Gombe — MWAMBA Jean-Pierre a payé $320",time:"Il y a 1 min",cls:"ap"},
+  {type:"paiement",msg:"✅ Limete — KABILA Anastasie a payé $480",time:"Il y a 3 min",cls:"ap"},
+  {type:"critique",msg:"LUMUMBA Investment — 3 mois impayés · $7,200 dus",time:"Il y a 7 min",cls:"ac"},
+  {type:"paiement",msg:"✅ Kasa-Vubu — TSHISEKEDI Maison a payé $240",time:"Il y a 9 min",cls:"ap"},
+  {type:"paiement",msg:"✅ Matete — NGOMA Patrick a payé $160",time:"Il y a 12 min",cls:"ap"},
+  {type:"warning",msg:"NDJILI — 23 nouveaux logements non-déclarés",time:"Il y a 15 min",cls:"aw"},
+  {type:"paiement",msg:"✅ Lemba — KAYUMBA Propriétés a payé $400",time:"Il y a 18 min",cls:"ap"},
+  {type:"critique",msg:"MOBUTU & Fils — 12 parcelles · Montant dû: $18,600",time:"Il y a 22 min",cls:"ac"},
+  {type:"paiement",msg:"✅ Ngaliema — MULUMBA Christian a payé $560",time:"Il y a 25 min",cls:"ap"},
+  {type:"paiement",msg:"✅ Selembao — BANZA Famille a payé $280",time:"Il y a 31 min",cls:"ap"},
+  {type:"warning",msg:"MASINA — Taux de conformité en baisse (-8%)",time:"Il y a 45 min",cls:"aw"},
+  {type:"info",msg:"Rapport Gombe — 241/347 conformes · $72,640 encaissé",time:"Il y a 2h",cls:"ai"},
+];
+let mActiveCommune = 0;
+
+function initMinister() {
+  renderMCommunes();
+  renderMDetail(mCommunes[0]);
+  renderMBailleurs();
+  renderMAlertes();
+  setInterval(() => {
+    const now = new Date();
+    document.getElementById('m-clock').textContent = now.toLocaleTimeString('fr-FR') + '  |  31 Mars 2026';
+  }, 1000);
+  let sec = 45;
+  setInterval(() => { sec--; if(sec<0) sec=60; document.getElementById('m-countdown').textContent = '00:'+String(sec).padStart(2,'0'); }, 1000);
+}
+function renderMCommunes() {
+  const list = document.getElementById('m-commune-list');
+  list.innerHTML = '';
+  mCommunes.forEach((c,i) => {
+    const pct = Math.round((c.p/c.b)*100);
+    const col = pct>=80?'#00E67A':pct>=60?'#FFB800':'#FF3A5C';
+    const el = document.createElement('div');
+    el.className = 'm-commune'+(i===mActiveCommune?' active':'');
+    el.innerHTML = `
+<div class="m-commune-name">${c.name}</div>
+<div class="m-chips">
+<div class="m-chip chip-b">⌂ ${c.b}</div>
+<div class="m-chip chip-l">👤 ${c.l.toLocaleString()}</div>
+</div>
+<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#D4AF37;margin-top:4px;font-weight:700">💰 $${c.enc.toLocaleString()} encaissé</div>
+<div class="m-bar">
+<div class="m-bar-track">
+<div class="m-bar-fill" style="width:${pct}%;background:${col}"></div>
+</div>
+<div class="m-bar-pct" style="color:${col}">${pct}%</div>
+</div>
+`;
+    el.onclick = () => { mActiveCommune=i; renderMDetail(c); renderMCommunes(); };
+    list.appendChild(el);
+  });
+}
+function renderMDetail(c) {
+  document.getElementById('m-det-title').textContent = c.name.toUpperCase();
+  document.getElementById('m-det-sub').textContent = `${c.prov} · Code ${c.code}`;
+  document.getElementById('mk1').textContent = c.b;
+  document.getElementById('mk2').textContent = c.l.toLocaleString();
+  document.getElementById('mk3').textContent = c.p;
+  document.getElementById('mk4').textContent = c.n;
+  document.getElementById('mk5').textContent = '$'+c.enc.toLocaleString();
+  document.getElementById('mk6').textContent = '$'+c.total.toLocaleString();
+}
+function renderMBailleurs() {
+  const list = document.getElementById('m-bailleurs-list');
+  const pills = {ok:`<span class="sbadge s-ok">
+<div class="sdot sdot-ok"></div>
+Conforme</span>`,warn:`<span class="sbadge s-warn">
+<div class="sdot sdot-warn"></div>
+Partiel</span>`,bad:`<span class="sbadge s-bad">
+<div class="sdot sdot-bad"></div>
+Non-payé</span>`};
+  const acts = {ok:`
+<button class="mact">Détail</button>
+`,warn:`
+<button class="mact">Relance</button>
+`,bad:`
+<button class="mact bad">⚠ Saisir</button>
+`};
+  list.innerHTML = mBailleurs.map((b,i)=>`
+<div class="m-tbl-row m-tbl-body">
+<div class="row-idx">${String(i+1).padStart(2,'0')}</div>
+
+<div>
+<div class="bname">${b.name}</div>
+
+<div class="bsub">${b.id}</div>
+</div>
+
+<div class="bparc">${b.parc}</div>
+
+<div class="bloyer">$${b.loyer.toLocaleString()}</div>
+
+<div>${pills[b.statut]}</div>
+
+<div>${acts[b.statut]}</div>
+</div>
+`).join('');
+}
+function renderMAlertes() {
+  document.getElementById('m-alertes-list').innerHTML = mAlertes.map(a=>`
+<div class="m-alerte ${a.cls}">
+<div class="a-type">▲ ${a.type.toUpperCase()}</div>
+
+<div class="a-msg">${a.msg}</div>
+
+<div class="a-time">${a.time}</div>
+</div>
+`).join('');
+}
+
+// ══════════════════════════════
+// INTERFACE SUPERVISEUR
+// ══════════════════════════════
+const svActivity = [
+  {agent:"AGT-2047",heure:"09:47",action:"Enregistrement",bailleur:"MWAMBA Jean-Pierre",statut:"ok"},
+  {agent:"AGT-2051",heure:"09:31",action:"Mise à jour",bailleur:"KABILA Anastasie",statut:"warn"},
+  {agent:"AGT-2039",heure:"09:12",action:"Photo ajoutée",bailleur:"TSHISEKEDI Maison",statut:"ok"},
+  {agent:"AGT-2047",heure:"08:58",action:"Enregistrement",bailleur:"LUMUMBA Investment",statut:"bad"},
+  {agent:"AGT-2055",heure:"08:44",action:"Nouveau locataire",bailleur:"KAYUMBA Propriétés",statut:"ok"},
+];
+const svBailleurs = [
+  {id:"KIN-0847",name:"MWAMBA Jean-Pierre",parc:4,loc:12,loyer:3200,statut:"ok",date:"Auj. 09:47"},
+  {id:"KIN-1203",name:"KABILA Anastasie",parc:2,loc:6,loyer:1800,statut:"warn",date:"Auj. 09:31"},
+  {id:"KIN-0312",name:"LUMUMBA Investment",parc:8,loc:24,loyer:7400,statut:"bad",date:"Auj. 08:58"},
+  {id:"KIN-2041",name:"TSHISEKEDI Maison",parc:3,loc:9,loyer:2600,statut:"ok",date:"Auj. 09:12"},
+  {id:"KIN-0089",name:"MOBUTU & Fils",parc:12,loc:36,loyer:10200,statut:"bad",date:"Hier 17:22"},
+  {id:"KIN-1567",name:"KAYUMBA Propriétés",parc:5,loc:15,loyer:4100,statut:"ok",date:"Hier 14:05"},
+];
+const svAgents = [
+  {id:"AGT-2047",name:"NGOMA Patrick",av:"👮",enr:14,photos:42,conf:92},
+  {id:"AGT-2051",name:"LUKUSA Marie",av:"👩",enr:11,photos:33,conf:87},
+  {id:"AGT-2039",name:"BANZA Christian",av:"👨",enr:9,photos:27,conf:78},
+  {id:"AGT-2055",name:"MUTOMBO Grâce",av:"👩",enr:13,photos:39,conf:95},
+];
+function initSupervisor() {
+  simulateNewPayment();
+  const pills = {ok:`<span class="pill p-ok">
+<div class="pd pd-ok"></div>
+À jour</span>`,warn:`<span class="pill p-warn">
+<div class="pd pd-warn"></div>
+Partiel</span>`,bad:`<span class="pill p-bad">
+<div class="pd pd-bad"></div>
+Non-payé</span>`};
+  const acts = {ok:`
+<button class="sv-act av">Voir</button>
+`,warn:`
+<button class="sv-act aw2">Valider</button>
+`,bad:`
+<button class="sv-act aa">⚠ Escalader</button>
+`};
+  document.getElementById('sv-activity-body').innerHTML = svActivity.map(a=>`
+<tr>
+<td><span class="sv-badge2 bb">${a.agent}</span></td>
+
+<td class="mono">${a.heure}</td>
+
+<td>${a.action}</td>
+
+<td class="nm">${a.bailleur}</td>
+
+<td>${pills[a.statut]}</td>
+
+<td>${acts[a.statut]}</td>
+</tr>
+`).join('');
+  document.getElementById('sv-bailleurs-body').innerHTML = svBailleurs.map(b=>`
+<tr>
+<td class="mono">${b.id}</td>
+
+<td class="nm">${b.name}</td>
+
+<td style="text-align:center"><span class="sv-badge2 bb">${b.parc}</span></td>
+
+<td style="text-align:center"><span class="sv-badge2 bgo">${b.loc}</span></td>
+
+<td class="mono">$${b.loyer.toLocaleString()}</td>
+
+<td>${pills[b.statut]}</td>
+
+<td class="mono" style="font-size:9px;color:var(--text3)">${b.date}</td>
+
+<td>${acts[b.statut]}</td>
+</tr>
+`).join('');
+  document.getElementById('sv-agents-grid').innerHTML = svAgents.map(a=>`
+<div class="ag-card">
+<div class="ag-top">
+<div class="ag-av">${a.av}</div>
+
+<div>
+<div class="ag-name">${a.name}</div>
+
+<div class="ag-id">${a.id}</div>
+</div>
+
+<div style="margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--green)"></div>
+</div>
+
+<div class="ag-stats">
+<div class="ast">
+<div class="ast-val">${a.enr}</div>
+
+<div class="ast-lbl">Enreg.</div>
+</div>
+
+<div class="ast">
+<div class="ast-val">${a.photos}</div>
+
+<div class="ast-lbl">Photos</div>
+</div>
+
+<div class="ast">
+<div class="ast-val" style="color:var(--green)">${a.conf}%</div>
+
+<div class="ast-lbl">Conform.</div>
+</div>
+</div>
+
+<div class="pb">
+<div class="pf" style="width:${a.conf}%;background:linear-gradient(90deg,var(--green),var(--cyan2))"></div>
+</div>
+</div>
+`).join('');
+}
+const svPayments = [
+  {heure:"09:47",bailleur:"MWAMBA Jean-Pierre",parc:4,methode:"M-Pesa",montant:320,ref:"TXN-2026-03-48291"},
+  {heure:"09:38",bailleur:"KABILA Anastasie",parc:2,methode:"Airtel Money",montant:160,ref:"TXN-2026-03-48287"},
+  {heure:"09:22",bailleur:"TSHISEKEDI Maison",parc:3,methode:"Rawbank",montant:240,ref:"TXN-2026-03-48280"},
+  {heure:"09:11",bailleur:"KAYUMBA Propriétés",parc:5,methode:"M-Pesa",montant:400,ref:"TXN-2026-03-48275"},
+  {heure:"08:54",bailleur:"NGOMA Patrick",parc:2,methode:"Orange Money",montant:160,ref:"TXN-2026-03-48269"},
+  {heure:"08:41",bailleur:"LUKUSA Marie",parc:1,methode:"M-Pesa",montant:80,ref:"TXN-2026-03-48263"},
+  {heure:"08:30",bailleur:"BANZA Christian",parc:3,methode:"Equity Bank",montant:240,ref:"TXN-2026-03-48258"},
+  {heure:"08:18",bailleur:"MUTOMBO Grâce",parc:6,methode:"Airtel Money",montant:480,ref:"TXN-2026-03-48251"},
+  {heure:"08:05",bailleur:"NKUNDA Investissements",parc:2,methode:"M-Pesa",montant:160,ref:"TXN-2026-03-48244"},
+  {heure:"07:52",bailleur:"MOANDA Famille",parc:4,methode:"TMB",montant:320,ref:"TXN-2026-03-48238"},
+];
+
+function renderSvPayments() {
+  const body = document.getElementById('sv-payments-body');
+  if(!body) return;
+  body.innerHTML = svPayments.map(p => `
+    <tr>
+      <td class="mono">${p.heure}</td>
+      <td class="nm">${p.bailleur}</td>
+      <td style="text-align:center"><span class="sv-badge2 bb">${p.parc}</span></td>
+      <td>${p.methode}</td>
+      <td class="mono" style="color:var(--green);font-weight:700">+$${p.montant}</td>
+      <td><span class="pill p-ok"><div class="pd pd-ok"></div>Confirmé</span></td>
+    </tr>`).join('');
+
+  // Graphe barres
+  const chart = document.getElementById('sv-bar-chart');
+  if(!chart) return;
+  const moisData = [
+    {m:"Jan",enc:58200,att:89000},
+    {m:"Fév",enc:60240,att:91000},
+    {m:"Mar",enc:72640,att:96000},
+  ];
+  const maxVal = Math.max(...moisData.map(d=>d.att));
+  chart.innerHTML = moisData.map(d => `
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+      <div style="display:flex;align-items:flex-end;gap:3px;height:100px">
+        <div style="width:28px;background:var(--green);border-radius:3px 3px 0 0;height:${Math.round((d.enc/maxVal)*100)}px" title="Encaissé: $${d.enc.toLocaleString()}"></div>
+        <div style="width:28px;background:var(--red);opacity:.5;border-radius:3px 3px 0 0;height:${Math.round(((d.att-d.enc)/maxVal)*100)}px" title="Non-payé: $${(d.att-d.enc).toLocaleString()}"></div>
+      </div>
+      <div style="font-size:9px;color:var(--text2);font-family:'JetBrains Mono',monospace">${d.m}</div>
+      <div style="font-size:9px;color:var(--green);font-weight:700">$${(d.enc/1000).toFixed(0)}k</div>
+    </div>`).join('');
+}
+
+// Notification simulée : nouveau paiement toutes les 18 secondes
+function simulateNewPayment() {
+  const nouveaux = [
+    {bailleur:"KIMBA Robert",montant:240,commune:"Gombe",methode:"M-Pesa"},
+    {bailleur:"BOLAMBA Sylvie",montant:160,commune:"Gombe",methode:"Airtel"},
+    {bailleur:"NTUMBA Jean",montant:400,commune:"Gombe",methode:"Orange Money"},
+    {bailleur:"KALALA Patience",montant:80,commune:"Gombe",methode:"M-Pesa"},
+  ];
+  let idx = 0;
+  setInterval(() => {
+    const p = nouveaux[idx % nouveaux.length]; idx++;
+    const now = new Date();
+    const heure = now.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    const ref = 'TXN-2026-03-'+Math.floor(10000+Math.random()*89999);
+    // Ajouter en tête de tableau paiements
+    svPayments.unshift({heure,bailleur:p.bailleur,parc:Math.ceil(p.montant/80),methode:p.methode,montant:p.montant,ref});
+    if(svPayments.length>15) svPayments.pop();
+    // Mettre à jour le total affiché
+    const encEl = document.getElementById('sv-enc-mois');
+    if(encEl) {
+      const cur = parseInt(encEl.textContent.replace(/[$, ]/g,'')) + p.montant;
+      encEl.textContent = '$'+cur.toLocaleString();
+    }
+    // Mettre à jour total ministre
+    const mTot = document.getElementById('m-total-enc');
+    if(mTot) {
+      const cur2 = parseInt(mTot.textContent.replace(/[$, ]/g,'')) + p.montant;
+      mTot.textContent = '$'+cur2.toLocaleString();
+    }
+    // Ajouter notif dans les alertes Ministre
+    const al = document.getElementById('m-alertes-list');
+    if(al) {
+      const div = document.createElement('div');
+      div.className = 'm-alerte ap';
+      div.innerHTML = `<div class="a-type">▲ PAIEMENT REÇU</div><div class="a-msg">✅ ${p.commune} — ${p.bailleur} a payé <strong>$${p.montant}</strong> via ${p.methode}</div><div class="a-time">À l'instant · ${ref}</div>`;
+      al.insertBefore(div, al.firstChild);
+    }
+    if(document.getElementById('sv-encaissements') && document.getElementById('sv-encaissements').classList.contains('active')) {
+      renderSvPayments();
+    }
+  }, 18000);
+}
+
+function svTab(name, btn) {
+  document.querySelectorAll('.sv-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sv-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('sv-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='encaissements') renderSvPayments();
+}
+
+// ══════════════════════════════
+// INTERFACE AGENT
+// ══════════════════════════════
+let agStep = 1, agParcN = 1, agLocN = 1;
+function agUpdateUI() {
+  for(let i=1;i<=5;i++){
+    document.getElementById('agp'+i).classList.toggle('active',i===agStep);
+    const s=document.getElementById('ags'+i); s.classList.remove('active','done');
+    if(i===agStep) s.classList.add('active'); if(i<agStep) s.classList.add('done');
+    const sc=document.getElementById('agsc'+i); sc.textContent=i<agStep?'✓':i;
+  }
+  document.getElementById('ag-btn-prev').style.display=agStep>1?'block':'none';
+  document.getElementById('ag-btn-next-lbl').textContent=agStep===5?'Soumettre ✓':'Suivant →';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function agNext() {
+  if(agStep<5){agStep++;agUpdateUI();}
+  else {
+    document.querySelectorAll('.ag-panel').forEach(p=>p.style.display='none');
+    document.querySelector('.ag-gps').style.display='none';
+    document.querySelector('.ag-step-wrap').style.display='none';
+    document.getElementById('ag-bottom').style.display='none';
+    const id='BLR-KIN-'+new Date().getFullYear()+'-'+Math.floor(10000+Math.random()*89999);
+    document.getElementById('ag-success-id').textContent=id;
+    document.getElementById('ag-success').classList.add('show');
+  }
+}
+function agPrev(){if(agStep>1){agStep--;agUpdateUI();}}
+function agReset(){
+  agStep=1;
+  document.querySelectorAll('.ag-panel').forEach(p=>{p.style.display='';});
+  document.querySelector('.ag-gps').style.display='';
+  document.querySelector('.ag-step-wrap').style.display='';
+  document.getElementById('ag-bottom').style.display='';
+  document.getElementById('ag-success').classList.remove('show');
+  agUpdateUI();
+}
+function agAddParc(){
+  agParcN++;
+  const d=document.createElement('div'); d.className='ag-loc-row';
+  d.innerHTML=`
+<div class="ag-loc-num"><span>📌 Parcelle #${agParcN}</span>
+<button class="ag-rm-btn" onclick="this.closest('.ag-loc-row').remove()">✕</button>
+</div>
+
+<div class="ag-form">
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">N° Parcelle</label>
+
+<input class="ag-input" placeholder="P-2024-XXXXX" style="font-family:'JetBrains Mono',monospace"></div>
+
+<div class="ag-field">
+<label class="ag-label">Type</label>
+
+<select class="ag-input">
+<option>Maison</option>
+
+<option>Appartement</option>
+
+<option>Studio</option>
+
+<option>Villa</option>
+</select>
+</div>
+</div>
+
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">Surface (m²)</label>
+
+<input class="ag-input" type="number"></div>
+
+<div class="ag-field">
+<label class="ag-label">Loyer (USD)</label>
+
+<input class="ag-input" type="number"></div>
+</div>
+
+<div class="ag-field">
+<label class="ag-label">Adresse</label>
+
+<input class="ag-input"></div>
+</div>
+`;
+  document.getElementById('ag-parc-list').appendChild(d);
+}
+function agAddLoc(){
+  agLocN++;
+  const d=document.createElement('div'); d.className='ag-loc-row';
+  d.innerHTML=`
+<div class="ag-loc-num"><span>👤 Locataire #${agLocN}</span>
+<button class="ag-rm-btn" onclick="this.closest('.ag-loc-row').remove()">✕</button>
+</div>
+
+<div class="ag-form">
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">Nom complet</label>
+
+<input class="ag-input" placeholder="Nom & Prénom"></div>
+
+<div class="ag-field">
+<label class="ag-label">Téléphone</label>
+
+<input class="ag-input" placeholder="+243..."></div>
+</div>
+
+<div class="ag-form ag-form2">
+<div class="ag-field">
+<label class="ag-label">Parcelle</label>
+
+<select class="ag-input">
+<option>Parcelle #1</option>
+</select>
+</div>
+
+<div class="ag-field">
+<label class="ag-label">Depuis</label>
+
+<input class="ag-input" type="date"></div>
+</div>
+</div>
+`;
+  document.getElementById('ag-loc-list').appendChild(d);
+}
+function agPhoto(el){
+  el.classList.add('filled'); el.querySelector('.ps-icon').textContent='✅';
+  if(!el.querySelector('.ps-check')){const c=document.createElement('div');c.className='ps-check';c.textContent='✓';el.appendChild(c);}
+}
+function agSelectStatus(r){ document.querySelectorAll('.so').forEach(o=>o.classList.remove('selected')); r.closest('.so').classList.add('selected'); }
+function agRefreshGPS(){
+  const coords=['-4.3217° S, 15.3222° E · Commune de Gombe','-4.3891° S, 15.3456° E · Commune de Lemba','-4.3012° S, 15.2987° E · Commune de Ngaliema'];
+  document.getElementById('ag-coords').textContent=coords[Math.floor(Math.random()*coords.length)];
+}
+function agLang(l,btn){ document.querySelectorAll('.ag-lb').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+</script>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     INTERFACE 4 — ESPACE BAILLEUR
+═══════════════════════════════════════════════════════ -->
+<style>
+#app-bailleur {
+  --bg:#FFF8F0;
+  --surface:#FFFFFF;
+  --surface2:#FFF3E8;
+  --surface3:#FFE8CC;
+  --border:#FFD5A8;
+  --border2:#FFBC70;
+  --text:#1A0A00;
+  --text2:#7A4A20;
+  --text3:#C4935A;
+  --orange:#F97316;
+  --orange-d:#EA6C0A;
+  --orange-dim:rgba(249,115,22,0.1);
+  --green:#059669;
+  --green-dim:rgba(5,150,105,0.1);
+  --red:#DC2626;
+  --red-dim:rgba(220,38,38,0.1);
+  --blue:#1A56DB;
+  --blue-dim:rgba(26,86,219,0.08);
+  --gold:#C9850A;
+  --gold-dim:rgba(201,133,10,0.1);
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Outfit',sans-serif;
+  min-height:100vh;
+}
+
+/* TOPBAR */ .bl-topbar {
+  background:linear-gradient(135deg,#F97316,#EA580C);
+  color:white;
+  padding:0 16px;
+  height:60px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 4px 20px rgba(249,115,22,0.4);
+}
+
+.bl-brand {
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.bl-logo {
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.25);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+}
+
+.bl-app-name {
+  font-size:15px;
+  font-weight:800;
+  letter-spacing:.3px;
+}
+
+.bl-app-sub {
+  font-size:10px;
+  opacity:.8;
+}
+
+.bl-user-chip {
+  background:rgba(255,255,255,0.2);
+  border:1px solid rgba(255,255,255,0.3);
+  border-radius:20px;
+  padding:6px 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:12px;
+  font-weight:600;
+}
+
+.bl-avatar {
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+}
+
+/* ALERTE ÉCHÉANCE */ .bl-alert-banner {
+  background:linear-gradient(135deg,#FEF3C7,#FDE68A);
+  border-bottom:2px solid #F59E0B;
+  padding:12px 16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.bl-alert-icon {
+  font-size:22px;
+  flex-shrink:0;
+}
+
+.bl-alert-title {
+  font-size:13px;
+  font-weight:700;
+  color:#92400E;
+}
+
+.bl-alert-sub {
+  font-size:11px;
+  color:#B45309;
+}
+
+.bl-pay-now-btn {
+  margin-left:auto;
+  background:#F97316;
+  color:white;
+  border:none;
+  border-radius:8px;
+  padding:8px 16px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  white-space:nowrap;
+  box-shadow:0 4px 12px rgba(249,115,22,0.35);
+  transition:all .2s;
+}
+
+.bl-pay-now-btn:hover {
+  background:#EA580C;
+  transform:translateY(-1px);
+}
+
+/* TABS */ .bl-tabs {
+  background:var(--surface);
+  border-bottom:2px solid var(--border);
+  display:flex;
+  overflow-x:auto;
+  gap:0;
+}
+
+.bl-tab {
+  padding:14px 20px;
+  font-size:13px;
+  font-weight:600;
+  color:var(--text2);
+  cursor:pointer;
+  border:none;
+  background:transparent;
+  font-family:'Outfit',sans-serif;
+  white-space:nowrap;
+  border-bottom:3px solid transparent;
+  margin-bottom:-2px;
+  transition:all .2s;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.bl-tab:hover {
+  color:var(--orange);
+  background:var(--orange-dim);
+}
+
+.bl-tab.active {
+  color:var(--orange);
+  border-bottom-color:var(--orange);
+  font-weight:700;
+}
+
+/* CONTENU */ .bl-content {
+  max-width:720px;
+  margin:0 auto;
+  padding:20px 16px 80px;
+}
+
+/* PANEL */ .bl-panel {
+  display:none;
+}
+
+.bl-panel.active {
+  display:block;
+}
+
+/* CARTE STATUT */ .bl-status-card {
+  background:linear-gradient(135deg,#F97316,#C2410C);
+  border-radius:16px;
+  padding:22px;
+  color:white;
+  margin-bottom:18px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 24px rgba(249,115,22,0.35);
+}
+
+.bl-status-card::before {
+  content:'';
+  position:absolute;
+  right:-20px;
+  top:-20px;
+  width:140px;
+  height:140px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.08);
+}
+
+.bl-status-card::after {
+  content:'';
+  position:absolute;
+  right:30px;
+  bottom:-30px;
+  width:100px;
+  height:100px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.05);
+}
+
+.bl-status-row {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+  position:relative;
+  z-index:1;
+}
+
+.bl-status-icon {
+  font-size:32px;
+}
+
+.bl-status-name {
+  font-size:18px;
+  font-weight:800;
+  line-height:1;
+}
+
+.bl-status-id {
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;
+  opacity:.75;
+  margin-top:2px;
+}
+
+.bl-status-badge {
+  margin-left:auto;
+  background:rgba(255,255,255,0.2);
+  border:1px solid rgba(255,255,255,0.4);
+  border-radius:20px;
+  padding:5px 12px;
+  font-size:11px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.bl-status-dot {
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#4ADE80;
+  animation:bpulse 1.5s infinite;
+}
+
+@keyframes bpulse {
+  0%,100% {
+  opacity:1
+}
+
+50% {
+  opacity:.4
+}
+
+}
+
+.bl-amounts {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:1px;
+  background:rgba(255,255,255,0.15);
+  border-radius:10px;
+  overflow:hidden;
+  position:relative;
+  z-index:1;
+}
+
+.bl-amount-box {
+  background:rgba(0,0,0,0.1);
+  padding:12px;
+  text-align:center;
+}
+
+.bl-amount-val {
+  font-size:20px;
+  font-weight:800;
+  line-height:1;
+}
+
+.bl-amount-lbl {
+  font-size:9px;
+  opacity:.75;
+  margin-top:3px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+/* PROPRIÉTÉS */ .bl-prop-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+  margin-bottom:18px;
+}
+
+@media(max-width:480px) {
+  .bl-prop-grid {
+  grid-template-columns:1fr;
+}
+
+}
+
+.bl-prop-card {
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  position:relative;
+  box-shadow:0 2px 8px rgba(249,115,22,0.06);
+  transition:all .2s;
+  cursor:pointer;
+}
+
+.bl-prop-card:hover {
+  border-color:var(--orange);
+  box-shadow:0 4px 16px rgba(249,115,22,0.12);
+  transform:translateY(-2px);
+}
+
+.bl-prop-top {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.bl-prop-icon {
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  background:var(--orange-dim);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  flex-shrink:0;
+}
+
+.bl-prop-name {
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+}
+
+.bl-prop-addr {
+  font-size:10px;
+  color:var(--text2);
+  margin-top:1px;
+}
+
+.bl-prop-stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+}
+
+.bl-pstat {
+  background:var(--surface2);
+  border-radius:6px;
+  padding:6px;
+  text-align:center;
+}
+
+.bl-pstat-val {
+  font-size:14px;
+  font-weight:800;
+  color:var(--orange);
+}
+
+.bl-pstat-lbl {
+  font-size:8px;
+  color:var(--text3);
+  margin-top:1px;
+}
+
+.bl-prop-status {
+  position:absolute;
+  top:12px;
+  right:12px;
+  padding:3px 8px;
+  border-radius:10px;
+  font-size:9px;
+  font-weight:700;
+}
+
+.ps-ok {
+  background:rgba(5,150,105,0.1);
+  color:#059669;
+  border:1px solid rgba(5,150,105,0.2);
+}
+
+.ps-due {
+  background:rgba(249,115,22,0.1);
+  color:#F97316;
+  border:1px solid rgba(249,115,22,0.2);
+}
+
+.ps-late {
+  background:rgba(220,38,38,0.1);
+  color:#DC2626;
+  border:1px solid rgba(220,38,38,0.2);
+}
+
+/* PAIEMENT FORM */ .bl-pay-card {
+  background:var(--surface);
+  border:2px solid var(--border);
+  border-radius:16px;
+  overflow:hidden;
+  margin-bottom:16px;
+  box-shadow:0 4px 16px rgba(249,115,22,0.08);
+}
+
+.bl-pay-header {
+  background:linear-gradient(135deg,var(--surface2),var(--surface3));
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.bl-pay-header-icon {
+  font-size:24px;
+}
+
+.bl-pay-header-title {
+  font-size:15px;
+  font-weight:700;
+  color:var(--text);
+}
+
+.bl-pay-header-sub {
+  font-size:11px;
+  color:var(--text2);
+  margin-top:1px;
+}
+
+.bl-pay-body {
+  padding:20px;
+}
+
+/* SÉLECTEUR MOIS */ .bl-month-selector {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:18px;
+}
+
+.bl-month-btn {
+  padding:10px 6px;
+  border-radius:10px;
+  border:1.5px solid var(--border);
+  background:var(--surface);
+  cursor:pointer;
+  text-align:center;
+  transition:all .2s;
+  font-family:'Outfit',sans-serif;
+}
+
+.bl-month-btn:hover {
+  border-color:var(--orange);
+  background:var(--orange-dim);
+}
+
+.bl-month-btn.selected {
+  border-color:var(--orange);
+  background:var(--orange-dim);
+}
+
+.bl-month-btn.paid {
+  border-color:var(--green);
+  background:rgba(5,150,105,0.07);
+  pointer-events:none;
+}
+
+.bl-month-btn.overdue {
+  border-color:var(--red);
+  background:rgba(220,38,38,0.07);
+}
+
+.bm-name {
+  font-size:12px;
+  font-weight:600;
+  color:var(--text);
+}
+
+.bm-status {
+  font-size:9px;
+  font-weight:700;
+  margin-top:2px;
+}
+
+.bl-month-btn.paid .bm-status {
+  color:var(--green);
+}
+
+.bl-month-btn.overdue .bm-status {
+  color:var(--red);
+}
+
+.bl-month-btn.selected .bm-status {
+  color:var(--orange);
+}
+
+/* TOTAL DÛ */ .bl-total-row {
+  background:var(--surface2);
+  border:1.5px solid var(--border2);
+  border-radius:12px;
+  padding:14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+
+.bl-total-label {
+  font-size:13px;
+  font-weight:600;
+  color:var(--text2);
+}
+
+.bl-total-amount {
+  font-size:28px;
+  font-weight:800;
+  color:var(--orange);
+  font-family:'JetBrains Mono',monospace;
+}
+
+.bl-total-detail {
+  font-size:10px;
+  color:var(--text3);
+  margin-top:2px;
+  text-align:right;
+}
+
+/* MÉTHODES DE PAIEMENT */ .bl-methods-title {
+  font-size:12px;
+  font-weight:700;
+  color:var(--text2);
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  margin-bottom:12px;
+}
+
+.bl-methods-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  margin-bottom:20px;
+}
+
+@media(max-width:400px) {
+  .bl-methods-grid {
+  grid-template-columns:1fr;
+}
+
+}
+
+.bl-method {
+  border:2px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  cursor:pointer;
+  transition:all .2s;
+  background:var(--surface);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  position:relative;
+}
+
+.bl-method:hover {
+  border-color:var(--orange);
+  background:var(--orange-dim);
+}
+
+.bl-method.active {
+  border-color:var(--orange);
+  background:var(--orange-dim);
+}
+
+.bl-method.active::after {
+  content:'✓';
+  position:absolute;
+  top:8px;
+  right:10px;
+  font-size:12px;
+  color:var(--orange);
+  font-weight:700;
+}
+
+.bl-method-icon {
+  font-size:28px;
+}
+
+.bl-method-name {
+  font-size:12px;
+  font-weight:700;
+  color:var(--text);
+  text-align:center;
+}
+
+.bl-method-sub {
+  font-size:10px;
+  color:var(--text2);
+  text-align:center;
+}
+
+/* FORMULAIRE PAIEMENT */ .bl-pay-form {
+  display:none;
+}
+
+.bl-pay-form.show {
+  display:block;
+}
+
+.bl-form-field {
+  margin-bottom:14px;
+}
+
+.bl-form-label {
+  font-size:11px;
+  font-weight:700;
+  color:var(--text2);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:6px;
+  display:block;
+}
+
+.bl-form-input {
+  width:100%;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1.5px solid var(--border2);
+  background:var(--surface);
+  font-family:'Outfit',sans-serif;
+  font-size:14px;
+  color:var(--text);
+  outline:none;
+  transition:all .2s;
+  -webkit-appearance:none;
+}
+
+.bl-form-input:focus {
+  border-color:var(--orange);
+  box-shadow:0 0 0 3px rgba(249,115,22,0.1);
+}
+
+.bl-form-row {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.bl-operator-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-top:6px;
+}
+
+.bl-op {
+  padding:10px 8px;
+  border-radius:8px;
+  border:1.5px solid var(--border);
+  cursor:pointer;
+  text-align:center;
+  font-size:12px;
+  font-weight:700;
+  transition:all .2s;
+  background:var(--surface);
+  color:var(--text2);
+  font-family:'Outfit',sans-serif;
+}
+
+.bl-op:hover {
+  border-color:var(--orange);
+}
+
+.bl-op.active {
+  border-color:var(--orange);
+  background:var(--orange-dim);
+  color:var(--orange);
+}
+
+.bl-op-logo {
+  font-size:18px;
+  display:block;
+  margin-bottom:3px;
+}
+
+/* BOUTON PAYER */ .bl-submit-btn {
+  width:100%;
+  padding:16px;
+  border-radius:12px;
+  border:none;
+  background:linear-gradient(135deg,#F97316,#EA580C);
+  color:white;
+  font-family:'Outfit',sans-serif;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(249,115,22,0.4);
+  transition:all .3s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  letter-spacing:.5px;
+}
+
+.bl-submit-btn:hover {
+  transform:translateY(-2px);
+  box-shadow:0 10px 28px rgba(249,115,22,0.5);
+}
+
+.bl-submit-btn:active {
+  transform:translateY(0);
+}
+
+.bl-submit-btn:disabled {
+  opacity:.6;
+  pointer-events:none;
+}
+
+/* SUCCÈS PAIEMENT */ .bl-success-overlay {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:rgba(255,248,240,0.97);
+  backdrop-filter:blur(10px);
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:30px;
+}
+
+.bl-success-overlay.show {
+  display:flex;
+}
+
+.bl-success-anim {
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#059669,#047857);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:52px;
+  margin-bottom:24px;
+  animation:successPop .6s cubic-bezier(.175,.885,.32,1.275);
+  box-shadow:0 12px 40px rgba(5,150,105,0.4);
+}
+
+@keyframes successPop {
+  from {
+  transform:scale(0);
+  opacity:0
+}
+
+to {
+  transform:scale(1);
+  opacity:1
+}
+
+}
+
+.bl-suc-title {
+  font-size:28px;
+  font-weight:900;
+  color:#059669;
+  margin-bottom:8px;
+}
+
+.bl-suc-ref {
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  background:white;
+  border:2px solid #D1FAE5;
+  color:#059669;
+  padding:10px 20px;
+  border-radius:10px;
+  margin:14px 0;
+  font-weight:700;
+  letter-spacing:1px;
+}
+
+.bl-suc-msg {
+  font-size:13px;
+  color:var(--text2);
+  line-height:1.6;
+  max-width:380px;
+  margin-bottom:8px;
+}
+
+/* NOTIFICATION TEMPS RÉEL */ .bl-notif-chain {
+  background:white;
+  border:1px solid #D1FAE5;
+  border-radius:12px;
+  padding:16px 20px;
+  margin:16px 0;
+  max-width:420px;
+  width:100%;
+  text-align:left;
+}
+
+.bl-notif-title {
+  font-size:11px;
+  font-weight:700;
+  color:#059669;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:10px;
+}
+
+.bl-notif-step {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:6px 0;
+  border-bottom:1px solid #F0FDF4;
+  font-size:12px;
+}
+
+.bl-notif-step:last-child {
+  border-bottom:none;
+}
+
+.bl-ns-icon {
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:12px;
+  flex-shrink:0;
+}
+
+.ns-done {
+  background:#D1FAE5;
+}
+
+.ns-sending {
+  background:#FEF3C7;
+  animation:bpulse 1s infinite;
+}
+
+.bl-ns-text {
+  flex:1;
+  color:#374151;
+}
+
+.bl-ns-time {
+  font-family:'JetBrains Mono',monospace;
+  font-size:9px;
+  color:#9CA3AF;
+}
+
+.bl-suc-new-btn {
+  margin-top:20px;
+  padding:14px 32px;
+  border-radius:10px;
+  border:none;
+  background:linear-gradient(135deg,#F97316,#EA580C);
+  color:white;
+  font-family:'Outfit',sans-serif;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(249,115,22,0.3);
+}
+
+/* HISTORIQUE */ .bl-hist-item {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  box-shadow:0 1px 4px rgba(249,115,22,0.06);
+}
+
+.bl-hist-icon {
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  flex-shrink:0;
+}
+
+.hi-ok {
+  background:rgba(5,150,105,0.1);
+}
+
+.hi-pending {
+  background:rgba(249,115,22,0.1);
+}
+
+.hi-fail {
+  background:rgba(220,38,38,0.1);
+}
+
+.bl-hist-info {
+  flex:1;
+}
+
+.bl-hist-title {
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+}
+
+.bl-hist-sub {
+  font-size:11px;
+  color:var(--text2);
+  margin-top:2px;
+}
+
+.bl-hist-amount {
+  font-family:'JetBrains Mono',monospace;
+  font-size:15px;
+  font-weight:700;
+}
+
+.ha-ok {
+  color:#059669;
+}
+
+.ha-pending {
+  color:#F97316;
+}
+
+/* SECTION TITRE */ .bl-section-title {
+  font-size:11px;
+  font-weight:700;
+  color:var(--text2);
+  text-transform:uppercase;
+  letter-spacing:2px;
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.bl-section-title::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background:var(--border);
+}
+
+/* RÉCAPITULATIF */ .bl-recap-box {
+  background:var(--surface2);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  padding:14px 16px;
+  margin-bottom:16px;
+}
+
+.bl-recap-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:6px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.bl-recap-row:last-child {
+  border-bottom:none;
+  font-weight:700;
+}
+
+.bl-recap-label {
+  font-size:12px;
+  color:var(--text2);
+}
+
+.bl-recap-val {
+  font-size:12px;
+  font-weight:600;
+  color:var(--text);
+  font-family:'JetBrains Mono',monospace;
+}
+
+
+</style>
+
+<!-- APP BAILLEUR HTML -->
+
+<div class="app-screen" id="app-bailleur">
+
+  <!-- TOPBAR -->
+  
+<div class="bl-topbar">
+    
+<div class="bl-brand">
+      
+<div class="bl-logo">🏠</div>
+
+      
+<div>
+        
+<div class="bl-app-name">IRL · Bailleur</div>
+
+        
+<div class="bl-app-sub">Espace Personnel</div>
+
+      </div>
+
+    </div>
+
+    
+<div class="bl-user-chip">
+      
+<div class="bl-avatar">👤</div>
+
+      <span>MWAMBA Jean-Pierre</span>
+    </div>
+
+  </div>
+
+
+  <!-- BANNER ÉCHÉANCE -->
+  
+<div class="bl-alert-banner">
+    
+<div class="bl-alert-icon">⚠️</div>
+
+    
+<div>
+      
+<div class="bl-alert-title">Impôt de Mars 2026 à payer</div>
+
+      
+<div class="bl-alert-sub">Échéance : 31 mars 2026 · Montant dû : 320 USD</div>
+
+    </div>
+
+    
+<button class="bl-pay-now-btn" onclick="blTab('payer', document.querySelector('.bl-tab:nth-child(2)'))">Payer maintenant</button>
+
+  </div>
+
+
+  <!-- ONGLETS -->
+  
+<div class="bl-tabs">
+    
+<button class="bl-tab active" onclick="blTab('accueil',this)">🏠 Accueil</button>
+
+    
+<button class="bl-tab" onclick="blTab('payer',this)">💳 Payer mes impôts</button>
+
+    
+<button class="bl-tab" onclick="blTab('historique',this)">📋 Historique</button>
+
+    
+<button class="bl-tab" onclick="blTab('proprietes',this)">🏘️ Mes propriétés</button>
+
+  </div>
+
+
+  
+<div class="bl-content">
+
+    <!-- ── ACCUEIL ── -->
+    
+<div class="bl-panel active" id="bl-accueil">
+
+      <!-- CARTE STATUT BAILLEUR -->
+      
+<div class="bl-status-card">
+        
+<div class="bl-status-row">
+          
+<div style="font-size:38px">🏠</div>
+
+          
+<div>
+            
+<div class="bl-status-name">MWAMBA Jean-Pierre</div>
+
+            
+<div class="bl-status-id">KIN-0847 · Commune de Gombe · DGRK-KIN-0847-2891</div>
+
+          </div>
+
+          
+<div class="bl-status-badge">
+<div class="bl-status-dot"></div>
+ Enregistré</div>
+
+        </div>
+
+        
+<div class="bl-amounts">
+          
+<div class="bl-amount-box">
+            
+<div class="bl-amount-val">4</div>
+
+            
+<div class="bl-amount-lbl">Parcelles</div>
+
+          </div>
+
+          
+<div class="bl-amount-box">
+            
+<div class="bl-amount-val">$3 200</div>
+
+            
+<div class="bl-amount-lbl">Loyers/mois</div>
+
+          </div>
+
+          
+<div class="bl-amount-box">
+            
+<div class="bl-amount-val" id="bl-conf-pct">75%</div>
+
+            
+<div class="bl-amount-lbl">Conformité</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- RÉSUMÉ FISCAL -->
+      
+<div class="bl-section-title">Situation fiscale — 2026</div>
+
+      
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px">
+        
+<div style="background:var(--surface);border:1.5px solid #BBF7D0;border-radius:12px;padding:14px;text-align:center">
+          
+<div style="font-size:24px;font-weight:800;color:#059669">2</div>
+
+          
+<div style="font-size:10px;color:#059669;font-weight:600;margin-top:3px">Mois payés</div>
+
+        </div>
+
+        
+<div style="background:var(--surface);border:1.5px solid #FED7AA;border-radius:12px;padding:14px;text-align:center">
+          
+<div style="font-size:24px;font-weight:800;color:#F97316">1</div>
+
+          
+<div style="font-size:10px;color:#F97316;font-weight:600;margin-top:3px">Mois dû</div>
+
+        </div>
+
+        
+<div style="background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:14px;text-align:center">
+          
+<div style="font-size:24px;font-weight:800;color:var(--text)">9</div>
+
+          
+<div style="font-size:10px;color:var(--text3);font-weight:600;margin-top:3px">Restants</div>
+
+        </div>
+
+      </div>
+
+
+      <!-- DERNIERS PAIEMENTS -->
+      
+<div class="bl-section-title">Derniers paiements</div>
+
+      
+<div class="bl-hist-item">
+        
+<div class="bl-hist-icon hi-ok">✅</div>
+
+        
+<div class="bl-hist-info">
+          
+<div class="bl-hist-title">Impôt Février 2026</div>
+
+          
+<div class="bl-hist-sub">M-Pesa · REF: TXN-2026-02-48291 · 28/02/2026 14:32</div>
+
+        </div>
+
+        
+<div class="bl-hist-amount ha-ok">$320</div>
+
+      </div>
+
+      
+<div class="bl-hist-item">
+        
+<div class="bl-hist-icon hi-ok">✅</div>
+
+        
+<div class="bl-hist-info">
+          
+<div class="bl-hist-title">Impôt Janvier 2026</div>
+
+          
+<div class="bl-hist-sub">Airtel Money · REF: TXN-2026-01-31052 · 30/01/2026 09:17</div>
+
+        </div>
+
+        
+<div class="bl-hist-amount ha-ok">$320</div>
+
+      </div>
+
+      
+<div class="bl-hist-item" style="border-color:#FED7AA">
+        
+<div class="bl-hist-icon hi-pending">⏳</div>
+
+        
+<div class="bl-hist-info">
+          
+<div class="bl-hist-title">Impôt Mars 2026</div>
+
+          
+<div class="bl-hist-sub" style="color:#F97316;font-weight:600">En attente · Échéance : 31/03/2026</div>
+
+        </div>
+
+        
+<div class="bl-hist-amount ha-pending">$320</div>
+
+      </div>
+
+
+      <!-- RACCOURCI PAYER -->
+      
+<button class="bl-submit-btn" style="margin-top:20px" onclick="blTab('payer', document.querySelector('.bl-tab:nth-child(2)'))">
+        💳 Payer l'impôt de Mars 2026
+      </button>
+
+    </div>
+
+
+    <!-- ── PAYER MES IMPÔTS ── -->
+    
+<div class="bl-panel" id="bl-payer">
+
+      
+<div class="bl-pay-card">
+        
+<div class="bl-pay-header">
+          
+<div class="bl-pay-header-icon">📅</div>
+
+          
+<div>
+            
+<div class="bl-pay-header-title">Sélectionnez le(s) mois à payer</div>
+
+            
+<div class="bl-pay-header-sub">Toutes vos parcelles sont incluses automatiquement</div>
+
+          </div>
+
+        </div>
+
+        
+<div class="bl-pay-body">
+          
+<div class="bl-month-selector">
+            
+<div class="bl-month-btn paid">
+<div class="bm-name">Janv.</div>
+
+<div class="bm-status">✓ Payé</div>
+</div>
+
+            
+<div class="bl-month-btn paid">
+<div class="bm-name">Févr.</div>
+
+<div class="bm-status">✓ Payé</div>
+</div>
+
+            
+<div class="bl-month-btn overdue selected" onclick="blToggleMonth(this)">
+<div class="bm-name">Mars</div>
+
+<div class="bm-status">⚠ Dû</div>
+</div>
+
+            
+<div class="bl-month-btn" onclick="blToggleMonth(this)">
+<div class="bm-name">Avril</div>
+
+<div class="bm-status">— À venir</div>
+</div>
+
+            
+<div class="bl-month-btn" onclick="blToggleMonth(this)">
+<div class="bm-name">Mai</div>
+
+<div class="bm-status">— À venir</div>
+</div>
+
+            
+<div class="bl-month-btn" onclick="blToggleMonth(this)">
+<div class="bm-name">Juin</div>
+
+<div class="bm-status">— À venir</div>
+</div>
+
+          </div>
+
+
+          
+<div class="bl-total-row">
+            
+<div>
+              
+<div class="bl-total-label">Total à payer</div>
+
+              
+<div class="bl-total-detail">1 mois × 4 parcelles × 80 USD</div>
+
+            </div>
+
+            
+<div style="text-align:right">
+              
+<div class="bl-total-amount" id="bl-total-amt">320 USD</div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- RÉCAPITULATIF FISCAL -->
+      
+<div class="bl-recap-box">
+        
+<div class="bl-recap-row"><span class="bl-recap-label">Bailleur</span><span class="bl-recap-val">MWAMBA J-P · KIN-0847</span></div>
+
+        
+<div class="bl-recap-row"><span class="bl-recap-label">Commune</span><span class="bl-recap-val">Gombe — Kinshasa</span></div>
+
+        
+<div class="bl-recap-row"><span class="bl-recap-label">Période</span><span class="bl-recap-val">Mars 2026</span></div>
+
+        
+<div class="bl-recap-row"><span class="bl-recap-label">Nombre de parcelles</span><span class="bl-recap-val">4 parcelles</span></div>
+
+        
+<div class="bl-recap-row"><span class="bl-recap-label">Taux mensuel / parcelle</span><span class="bl-recap-val">80 USD</span></div>
+
+        
+<div class="bl-recap-row" style="margin-top:4px"><span class="bl-recap-label" style="font-size:13px;font-weight:700;color:var(--text)">TOTAL</span><span class="bl-recap-val" style="font-size:15px;color:var(--orange)">320 USD</span></div>
+
+      </div>
+
+
+      <!-- MÉTHODES DE PAIEMENT -->
+      
+<div class="bl-pay-card">
+        
+<div class="bl-pay-header">
+          
+<div class="bl-pay-header-icon">💳</div>
+
+          
+<div>
+            
+<div class="bl-pay-header-title">Choisissez votre méthode de paiement</div>
+
+            
+<div class="bl-pay-header-sub">Paiement sécurisé · Reçu instantané · Notifie le Ministère</div>
+
+          </div>
+
+        </div>
+
+        
+<div class="bl-pay-body">
+          
+<div class="bl-methods-grid">
+            
+<div class="bl-method" onclick="blSelectMethod('mobile',this)">
+              
+<div class="bl-method-icon">📱</div>
+
+              
+<div class="bl-method-name">Mobile Money</div>
+
+              
+<div class="bl-method-sub">M-Pesa · Airtel · Orange</div>
+
+            </div>
+
+            
+<div class="bl-method" onclick="blSelectMethod('bank',this)">
+              
+<div class="bl-method-icon">🏦</div>
+
+              
+<div class="bl-method-name">Virement Bancaire</div>
+
+              
+<div class="bl-method-sub">Equity · Rawbank · TMB</div>
+
+            </div>
+
+          </div>
+
+
+          <!-- FORMULAIRE MOBILE MONEY -->
+          
+<div class="bl-pay-form" id="bl-form-mobile">
+            
+<div class="bl-methods-title">Opérateur Mobile</div>
+
+            
+<div class="bl-operator-grid" style="margin-bottom:16px">
+              
+<div class="bl-op" onclick="blSelectOp(this)"><span class="bl-op-logo">📲</span>M-Pesa</div>
+
+              
+<div class="bl-op" onclick="blSelectOp(this)"><span class="bl-op-logo">📡</span>Airtel</div>
+
+              
+<div class="bl-op" onclick="blSelectOp(this)"><span class="bl-op-logo">🟠</span>Orange</div>
+
+            </div>
+
+            
+<div class="bl-form-field">
+              
+<label class="bl-form-label">Numéro de téléphone Mobile Money</label>
+
+              
+<input class="bl-form-input" type="tel" placeholder="+243 8X XXX XXXX" id="bl-phone">
+            </div>
+
+            
+<div class="bl-form-field" style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:10px;padding:12px;font-size:12px;color:var(--text2)">
+              📲 Après confirmation, vous recevrez un <strong>code USSD</strong> sur votre téléphone pour valider le paiement de <strong>320 USD</strong>.
+            </div>
+
+          </div>
+
+
+          <!-- FORMULAIRE BANCAIRE -->
+          
+<div class="bl-pay-form" id="bl-form-bank">
+            
+<div class="bl-methods-title">Informations bancaires</div>
+
+            
+<div class="bl-form-field">
+              
+<label class="bl-form-label">Banque</label>
+
+              
+<select class="bl-form-input">
+                
+<option>— Sélectionner votre banque —</option>
+
+                
+<option>Equity Bank Congo</option>
+
+                
+<option>Rawbank</option>
+
+                
+<option>TMB (Trust Merchant Bank)</option>
+
+                
+<option>Ecobank RDC</option>
+
+                
+<option>BCDC</option>
+
+              </select>
+
+            </div>
+
+            
+<div class="bl-form-row">
+              
+<div class="bl-form-field">
+                
+<label class="bl-form-label">N° de compte</label>
+
+                
+<input class="bl-form-input" placeholder="CD XXXX XXXX XXXX" style="font-family:'JetBrains Mono',monospace">
+              </div>
+
+              
+<div class="bl-form-field">
+                
+<label class="bl-form-label">Titulaire du compte</label>
+
+                
+<input class="bl-form-input" placeholder="Nom tel que sur le compte">
+              </div>
+
+            </div>
+
+            
+<div class="bl-form-field" style="background:var(--blue-dim);border:1px solid rgba(26,86,219,0.2);border-radius:10px;padding:12px;font-size:12px;color:#1E40AF">
+              🏦 Compte destinataire DGRK : <strong style="font-family:'JetBrains Mono',monospace">DGRK-KIN-00-4892-001</strong><br>
+              Référence obligatoire : <strong style="font-family:'JetBrains Mono',monospace">KIN-0847-MARS2026</strong>
+            </div>
+
+          </div>
+
+
+          <!-- BOUTON PAYER -->
+          
+<button class="bl-submit-btn" id="bl-pay-btn" onclick="blProcessPayment()" style="margin-top:16px;display:none">
+            🔒 Confirmer le paiement de 320 USD
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ── HISTORIQUE ── -->
+    
+<div class="bl-panel" id="bl-historique">
+      
+<div class="bl-section-title">2026 — Exercice fiscal en cours</div>
+
+      
+<div class="bl-hist-item">
+        
+<div class="bl-hist-icon hi-ok">✅</div>
+
+        
+<div class="bl-hist-info">
+          
+<div class="bl-hist-title">Impôt Février 2026</div>
+
+          
+<div class="bl-hist-sub">M-Pesa · +243 81 234 5678 · REF: TXN-2026-02-48291 · 28/02/2026 14:32</div>
+
+        </div>
+
+        
+<div class="bl-hist-amount ha-ok">$320</div>
+
+      </div>
+
+      
+<div class="bl-hist-item">
+        
+<div class="bl-hist-icon hi-ok">✅</div>
+
+        
+<div class="bl-hist-info">
+          
+<div class="bl-hist-title">Impôt Janvier 2026</div>
+
+          
+<div class="bl-hist-sub">Airtel Money · REF: TXN-2026-01-31052 · 30/01/2026 09:17</div>
+
+        </div>
+
+        
+<div class="bl-hist-amount ha-ok">$320</div>
+
+      </div>
+
+      
+<div class="bl-section-title" style="margin-top:20px">2025</div>
+
+      
+<div class="bl-hist-item">
+        
+<div class="bl-hist-icon hi-ok">✅</div>
+
+        
+<div class="bl-hist-info">
+          
+<div class="bl-hist-title">Impôt Décembre 2025</div>
+
+          
+<div class="bl-hist-sub">Virement Rawbank · REF: TXN-2025-12-99102 · 29/12/2025</div>
+
+        </div>
+
+        
+<div class="bl-hist-amount ha-ok">$320</div>
+
+      </div>
+
+      
+<div class="bl-hist-item">
+        
+<div class="bl-hist-icon hi-ok">✅</div>
+
+        
+<div class="bl-hist-info">
+          
+<div class="bl-hist-title">Impôt Novembre 2025</div>
+
+          
+<div class="bl-hist-sub">M-Pesa · REF: TXN-2025-11-77341 · 28/11/2025</div>
+
+        </div>
+
+        
+<div class="bl-hist-amount ha-ok">$320</div>
+
+      </div>
+
+      <!-- TOTAL -->
+      
+<div style="background:linear-gradient(135deg,#059669,#047857);border-radius:12px;padding:16px;color:white;text-align:center;margin-top:16px">
+        
+<div style="font-size:11px;opacity:.8;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Total payé en 2025–2026</div>
+
+        
+<div style="font-size:32px;font-weight:800;font-family:'JetBrains Mono',monospace">$3 840</div>
+
+        
+<div style="font-size:11px;opacity:.75;margin-top:4px">12 versements confirmés · Bailleur modèle ⭐</div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ── MES PROPRIÉTÉS ── -->
+    
+<div class="bl-panel" id="bl-proprietes">
+      
+<div class="bl-section-title">Mes 4 parcelles enregistrées</div>
+
+      
+<div class="bl-prop-grid">
+        
+<div class="bl-prop-card">
+          
+<div class="ps-ok bl-prop-status">✓ Payé</div>
+
+          
+<div class="bl-prop-top">
+<div class="bl-prop-icon">🏠</div>
+
+<div>
+<div class="bl-prop-name">Parcelle Matonge</div>
+
+<div class="bl-prop-addr">Av. de la Paix, N° 12, Gombe</div>
+</div>
+</div>
+
+          
+<div class="bl-prop-stats">
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">3</div>
+
+<div class="bl-pstat-lbl">Locataires</div>
+</div>
+
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">$800</div>
+
+<div class="bl-pstat-lbl">Loyer/mois</div>
+</div>
+
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">120m²</div>
+
+<div class="bl-pstat-lbl">Surface</div>
+</div>
+
+          </div>
+
+        </div>
+
+        
+<div class="bl-prop-card">
+          
+<div class="ps-due bl-prop-status">⚠ Dû</div>
+
+          
+<div class="bl-prop-top">
+<div class="bl-prop-icon">🏢</div>
+
+<div>
+<div class="bl-prop-name">Immeuble Centre</div>
+
+<div class="bl-prop-addr">Av. des Huileries, N° 8, Gombe</div>
+</div>
+</div>
+
+          
+<div class="bl-prop-stats">
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">4</div>
+
+<div class="bl-pstat-lbl">Locataires</div>
+</div>
+
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">$1 200</div>
+
+<div class="bl-pstat-lbl">Loyer/mois</div>
+</div>
+
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">240m²</div>
+
+<div class="bl-pstat-lbl">Surface</div>
+</div>
+
+          </div>
+
+        </div>
+
+        
+<div class="bl-prop-card">
+          
+<div class="ps-ok bl-prop-status">✓ Payé</div>
+
+          
+<div class="bl-prop-top">
+<div class="bl-prop-icon">🏡</div>
+
+<div>
+<div class="bl-prop-name">Villa Ngaliema</div>
+
+<div class="bl-prop-addr">Av. Kasa-Vubu, N° 34, Gombe</div>
+</div>
+</div>
+
+          
+<div class="bl-prop-stats">
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">2</div>
+
+<div class="bl-pstat-lbl">Locataires</div>
+</div>
+
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">$700</div>
+
+<div class="bl-pstat-lbl">Loyer/mois</div>
+</div>
+
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">180m²</div>
+
+<div class="bl-pstat-lbl">Surface</div>
+</div>
+
+          </div>
+
+        </div>
+
+        
+<div class="bl-prop-card">
+          
+<div class="ps-ok bl-prop-status">✓ Payé</div>
+
+          
+<div class="bl-prop-top">
+<div class="bl-prop-icon">🏠</div>
+
+<div>
+<div class="bl-prop-name">Studio Limete</div>
+
+<div class="bl-prop-addr">Av. Victoire, N° 56, Gombe</div>
+</div>
+</div>
+
+          
+<div class="bl-prop-stats">
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">1</div>
+
+<div class="bl-pstat-lbl">Locataire</div>
+</div>
+
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">$500</div>
+
+<div class="bl-pstat-lbl">Loyer/mois</div>
+</div>
+
+            
+<div class="bl-pstat">
+<div class="bl-pstat-val">60m²</div>
+
+<div class="bl-pstat-lbl">Surface</div>
+</div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+  </div>
+<!-- fin bl-content -->
+
+  <!-- SUCCÈS PAIEMENT OVERLAY -->
+  
+<div class="bl-success-overlay" id="bl-success">
+    
+<div class="bl-success-anim">✓</div>
+
+    
+<div class="bl-suc-title">Paiement confirmé !</div>
+
+    
+<div class="bl-suc-ref" id="bl-suc-ref">TXN-2026-03-00000</div>
+
+    
+<div class="bl-suc-msg">Votre paiement de <strong>320 USD</strong> pour l'impôt de <strong>Mars 2026</strong> a été reçu et validé avec succès.</div>
+
+
+    <!-- CHAÎNE DE NOTIFICATION TEMPS RÉEL -->
+    
+<div class="bl-notif-chain">
+      
+<div class="bl-notif-title">✅ Notifications envoyées automatiquement</div>
+
+      
+<div class="bl-notif-step">
+<div class="bl-ns-icon ns-done">✓</div>
+
+<div class="bl-ns-text">Reçu fiscal envoyé sur votre téléphone</div>
+
+<div class="bl-ns-time" id="nt1">--:--</div>
+</div>
+
+      
+<div class="bl-notif-step">
+<div class="bl-ns-icon ns-done">✓</div>
+
+<div class="bl-ns-text">Superviseur Commune de Gombe notifié</div>
+
+<div class="bl-ns-time" id="nt2">--:--</div>
+</div>
+
+      
+<div class="bl-notif-step">
+<div class="bl-ns-icon ns-done">✓</div>
+
+<div class="bl-ns-text">Base DGRK nationale mise à jour</div>
+
+<div class="bl-ns-time" id="nt3">--:--</div>
+</div>
+
+      
+<div class="bl-notif-step">
+<div class="bl-ns-icon ns-done">✓</div>
+
+<div class="bl-ns-text">Tableau de bord Ministère actualisé</div>
+
+<div class="bl-ns-time" id="nt4">--:--</div>
+</div>
+
+    </div>
+
+
+    
+<button class="bl-suc-new-btn" onclick="blResetPayment()">↩ Retour à l'accueil</button>
+
+  </div>
+
+
+</div>
+<!-- fin app-bailleur -->
+
+
+<script>
+// ══════════════════════════════
+// INTERFACE BAILLEUR
+// ══════════════════════════════
+function blTab(name, btn) {
+  document.querySelectorAll('.bl-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.bl-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('bl-' + name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function blSelectMethod(type, el) {
+  document.querySelectorAll('.bl-method').forEach(m => m.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.bl-pay-form').forEach(f => f.classList.remove('show'));
+  document.getElementById('bl-form-' + type).classList.add('show');
+  document.getElementById('bl-pay-btn').style.display = 'flex';
+}
+
+function blSelectOp(el) {
+  document.querySelectorAll('.bl-op').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function blToggleMonth(el) {
+  if(el.classList.contains('paid')) return;
+  el.classList.toggle('selected');
+  // Recalcul montant
+  const selected = document.querySelectorAll('.bl-month-btn.selected:not(.paid)').length;
+  const total = selected * 320;
+  document.getElementById('bl-total-amt').textContent = total + ' USD';
+  const detail = document.querySelector('.bl-total-row .bl-total-detail');
+  if(detail) detail.textContent = selected + ' mois × 4 parcelles × 80 USD';
+}
+
+function blProcessPayment() {
+  const btn = document.getElementById('bl-pay-btn');
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Traitement en cours...';
+
+  setTimeout(() => {
+    // Générer référence
+    const ref = 'TXN-2026-03-' + Math.floor(10000 + Math.random() * 89999);
+    document.getElementById('bl-suc-ref').textContent = ref;
+
+    // Heures des notifications
+    const now = new Date();
+    const fmt = (d) => d.toLocaleTimeString('fr-FR', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+    document.getElementById('nt1').textContent = fmt(now);
+    document.getElementById('nt2').textContent = fmt(new Date(now.getTime() + 1200));
+    document.getElementById('nt3').textContent = fmt(new Date(now.getTime() + 2400));
+    document.getElementById('nt4').textContent = fmt(new Date(now.getTime() + 3600));
+
+    // Afficher succès
+    document.getElementById('bl-success').classList.add('show');
+    btn.disabled = false;
+    btn.innerHTML = '🔒 Confirmer le paiement de 320 USD';
+  }, 2200);
+}
+
+function blResetPayment() {
+  document.getElementById('bl-success').classList.remove('show');
+  blTab('accueil', document.querySelector('.bl-tab'));
+}
+</script>
+
+</body>
+</html>
+
+
