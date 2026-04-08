@@ -6,8 +6,7 @@
 <title>IRL · RDC — Système Provincial de Surveillance Fiscale</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Bebas+Neue&family=JetBrains+Mono:wght@400;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════════════ ÉCRAN DE CONNEXION ════════════════════════════════════════ */
- *, *::before, *::after {
+/* ════════════════════════════════════════ ÉCRAN DE CONNEXION ════════════════════════════════════════ */ *, *::before, *::after {
   margin:0;
   padding:0;
   box-sizing:border-box;
@@ -916,8 +915,7 @@ html, body {
   animation:mpulse 2s infinite
 }
 
-/* ═══════════════════════════════════════ INTERFACE 2 — SUPERVISEUR ═══════════════════════════════════════ */ 
-#app-supervisor {
+/* ═══════════════════════════════════════ INTERFACE 2 — SUPERVISEUR ═══════════════════════════════════════ */ #app-supervisor {
   --bg:#0B1120;
   --surface:#111827;
   --surface2:#1A2235;
@@ -1651,8 +1649,7 @@ html, body {
   background:#2563EB
 }
 
-/* ═══════════════════════════════════════ INTERFACE 3 — AGENT TERRAIN ═══════════════════════════════════════ */ 
-#app-agent {
+/* ═══════════════════════════════════════ INTERFACE 3 — AGENT TERRAIN ═══════════════════════════════════════ */ #app-agent {
   background:#F0F4F8;
   color:#0F172A;
   font-family:'Outfit',sans-serif;
@@ -2325,8 +2322,7 @@ to {
   display:block
 }
 
-/* scroll global */ 
-::-webkit-scrollbar {
+/* scroll global */ ::-webkit-scrollbar {
   width:4px
 }
 
@@ -2340,7 +2336,7 @@ to {
 </head>
 <body>
 
-<!-- ═══════════ ÉCRAN DE CONNEXION ═══════════ -->
+  <!-- ═══════════ ÉCRAN DE CONNEXION ═══════════ -->
 
 <div id="login-screen">
   
@@ -2353,10 +2349,10 @@ to {
       </div>
 
       
-<div class="login-title">IRL · DGRK</div>
+<div class="login-title">IRL · RDC</div>
 
       
-<div class="login-sub">Système Provincial de Surveillance Fiscale</div>
+<div class="login-sub">Système National de Surveillance Fiscale</div>
 
     </div>
 
@@ -2456,7 +2452,7 @@ to {
 <div>
 <div class="m-brand-title">IRL · RDC</div>
 
-<div class="m-brand-sub">Tableau de Bord Provincial — Ministère des Finances</div>
+<div class="m-brand-sub">Tableau de Bord National — Ministère des Finances</div>
 </div>
 
     </div>
@@ -2650,6 +2646,7 @@ Connexion Active</div>
 
 </div>
 
+
 <!-- ═══════════ APP SUPERVISEUR ═══════════ -->
 
 <div class="app-screen" id="app-supervisor">
@@ -2684,7 +2681,7 @@ Connexion Active</div>
 
       
 <button class="sv-tab" onclick="svTab('rapports',this)">📋 Rapports</button>
-
+      <button class="sv-tab" onclick="svTab('paiement-centre',this)" style="background:rgba(249,115,22,0.15);color:#FB923C;border:1px solid rgba(249,115,22,0.4);border-radius:6px;margin-left:6px">💵 Paiement au Centre</button>
     </div>
 
     
@@ -2829,7 +2826,7 @@ SUP-001</div>
 <div style="font-size:15px">🚨</div>
 
 <div>
-<div class="sf-msg">KALUBI Invest — 3 mois impayés · <strong style="color:var(--red)">$7,200</strong></div>
+<div class="sf-msg">LUMUMBA Invest — 3 mois impayés · <strong style="color:var(--red)">$7,200</strong></div>
 
 <div class="sf-agent">AGT-2047 · il y a 8 min</div>
 </div>
@@ -2855,7 +2852,7 @@ SUP-001</div>
 <div style="font-size:15px">🔍</div>
 
 <div>
-<div class="sf-msg">MULANGA & Fils — 3 parcelles non déclarées</div>
+<div class="sf-msg">MOBUTU & Fils — 3 parcelles non déclarées</div>
 
 <div class="sf-agent">Détection automatique GPS</div>
 </div>
@@ -2985,7 +2982,6 @@ SUP-001</div>
       
 <div class="sv-kpi cb">
 <div class="sv-kpi-icon">👮</div>
-
 <div class="sv-kpi-val b">8</div>
 
 <div class="sv-kpi-lbl">Agents actifs aujourd'hui</div>
@@ -3161,6 +3157,366 @@ SUP-001</div>
 
   </div>
 
+</div>
+
+<!-- PANEL PAIEMENT AU CENTRE -->
+<style>
+/* ── PAIEMENT CENTRE ── */
+.pc-wrap { max-width:720px; margin:0 auto; padding:20px 18px 60px; }
+.pc-banner {
+  background:linear-gradient(135deg,#F97316,#C2410C);
+  border-radius:14px; padding:18px 22px; color:white;
+  display:flex; align-items:center; gap:14px; margin-bottom:22px;
+  box-shadow:0 6px 24px rgba(249,115,22,0.35);
+}
+.pc-banner-icon { font-size:36px; flex-shrink:0; }
+.pc-banner-title { font-size:16px; font-weight:800; margin-bottom:3px; }
+.pc-banner-sub { font-size:11px; opacity:.8; }
+.pc-card {
+  background:var(--surface); border:1.5px solid var(--border);
+  border-radius:14px; overflow:hidden; margin-bottom:18px;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
+}
+.pc-card-hdr {
+  background:var(--surface2); border-bottom:1px solid var(--border);
+  padding:14px 20px; display:flex; align-items:center; gap:10px;
+}
+.pc-hdr-icon {
+  width:36px; height:36px; border-radius:10px;
+  display:flex; align-items:center; justify-content:center; font-size:18px;
+}
+.pc-hdr-icon.orange { background:rgba(249,115,22,0.12); }
+.pc-hdr-icon.blue   { background:rgba(26,86,219,0.10); }
+.pc-hdr-icon.green  { background:rgba(5,150,105,0.10); }
+.pc-hdr-title { font-size:14px; font-weight:700; color:var(--text); }
+.pc-hdr-sub   { font-size:10px; color:var(--text2); margin-top:2px; }
+.pc-body { padding:20px; }
+.pc-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media(max-width:520px){ .pc-grid2 { grid-template-columns:1fr; } }
+.pc-field { display:flex; flex-direction:column; gap:5px; }
+.pc-label {
+  font-size:11px; font-weight:700; color:var(--text2);
+  text-transform:uppercase; letter-spacing:1px;
+}
+.pc-req { color:#DC2626; }
+.pc-input {
+  width:100%; padding:11px 14px; border-radius:9px;
+  border:1.5px solid var(--border2); background:var(--surface);
+  font-family:'Outfit',sans-serif; font-size:13px; color:var(--text);
+  outline:none; transition:all .2s; -webkit-appearance:none;
+}
+.pc-input:focus { border-color:#F97316; box-shadow:0 0 0 3px rgba(249,115,22,0.12); }
+.pc-input::placeholder { color:var(--text3); }
+select.pc-input { cursor:pointer; }
+.pc-info-box {
+  background:rgba(26,86,219,0.07); border:1px solid rgba(26,86,219,0.2);
+  border-radius:10px; padding:12px 16px; font-size:12px;
+  color:#1E40AF; display:flex; gap:10px; align-items:flex-start;
+}
+.pc-total-row {
+  background:var(--surface2); border:2px solid #F97316;
+  border-radius:12px; padding:16px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:18px;
+}
+.pc-total-label { font-size:13px; font-weight:600; color:var(--text2); }
+.pc-total-val { font-size:30px; font-weight:800; color:#F97316; font-family:'JetBrains Mono',monospace; }
+.pc-total-detail { font-size:10px; color:var(--text3); margin-top:2px; text-align:right; }
+.pc-methods { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px; }
+@media(max-width:480px){ .pc-methods { grid-template-columns:1fr 1fr; } }
+.pc-method {
+  border:2px solid var(--border2); border-radius:10px; padding:12px 8px;
+  cursor:pointer; transition:all .2s; background:var(--surface);
+  display:flex; flex-direction:column; align-items:center; gap:6px; position:relative;
+}
+.pc-method:hover { border-color:#F97316; background:rgba(249,115,22,0.05); }
+.pc-method.sel { border-color:#F97316; background:rgba(249,115,22,0.08); }
+.pc-method.sel::after {
+  content:'✓'; position:absolute; top:6px; right:8px;
+  font-size:11px; color:#F97316; font-weight:700;
+}
+.pc-method-icon { font-size:24px; }
+.pc-method-name { font-size:11px; font-weight:700; color:var(--text); text-align:center; }
+.pc-method-sub  { font-size:9px; color:var(--text3); text-align:center; }
+.pc-submit-btn {
+  width:100%; padding:16px; border-radius:12px; border:none;
+  background:linear-gradient(135deg,#F97316,#EA580C);
+  color:white; font-family:'Outfit',sans-serif;
+  font-size:16px; font-weight:800; cursor:pointer;
+  box-shadow:0 6px 20px rgba(249,115,22,0.4);
+  transition:all .3s; display:flex; align-items:center;
+  justify-content:center; gap:10px; letter-spacing:.3px;
+}
+.pc-submit-btn:hover { transform:translateY(-2px); box-shadow:0 10px 28px rgba(249,115,22,0.5); }
+.pc-submit-btn:disabled { opacity:.6; pointer-events:none; }
+
+/* ── SUCCÈS ── */
+.pc-success {
+  display:none; flex-direction:column; align-items:center;
+  justify-content:center; text-align:center; padding:30px 20px;
+}
+.pc-success.show { display:flex; }
+.pc-success-anim {
+  width:100px; height:100px; border-radius:50%;
+  background:linear-gradient(135deg,#059669,#047857);
+  display:flex; align-items:center; justify-content:center;
+  font-size:48px; margin-bottom:20px;
+  animation:pcPop .5s cubic-bezier(.175,.885,.32,1.275);
+  box-shadow:0 12px 40px rgba(5,150,105,0.4);
+}
+@keyframes pcPop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.pc-suc-title { font-size:24px; font-weight:900; color:#059669; margin-bottom:8px; }
+.pc-suc-ref {
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+  background:var(--surface); border:2px solid #D1FAE5; color:#059669;
+  padding:9px 20px; border-radius:9px; margin:12px 0;
+  font-weight:700; letter-spacing:1px;
+}
+.pc-notif-chain {
+  background:var(--surface); border:1px solid #D1FAE5;
+  border-radius:12px; padding:16px 20px; margin:14px 0;
+  max-width:440px; width:100%; text-align:left;
+}
+.pc-notif-title { font-size:11px; font-weight:700; color:#059669; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px; }
+.pc-notif-step {
+  display:flex; align-items:center; gap:10px; padding:7px 0;
+  border-bottom:1px solid #F0FDF4; font-size:12px;
+}
+.pc-notif-step:last-child { border-bottom:none; }
+.pc-ns-icon {
+  width:26px; height:26px; border-radius:50%; background:#D1FAE5;
+  display:flex; align-items:center; justify-content:center; font-size:13px; flex-shrink:0;
+}
+.pc-ns-text { flex:1; color:#374151; }
+.pc-ns-time { font-family:'JetBrains Mono',monospace; font-size:9px; color:#9CA3AF; }
+.pc-sms-badge {
+  background:rgba(5,150,105,0.1); border:1px solid rgba(5,150,105,0.3);
+  border-radius:8px; padding:10px 16px; font-size:12px; color:#059669;
+  display:flex; align-items:center; gap:8px; margin-bottom:16px; max-width:440px; width:100%;
+}
+.pc-new-btn {
+  padding:13px 30px; border-radius:10px; border:none;
+  background:linear-gradient(135deg,#F97316,#EA580C); color:white;
+  font-family:'Outfit',sans-serif; font-size:14px; font-weight:700;
+  cursor:pointer; box-shadow:0 6px 20px rgba(249,115,22,0.3);
+}
+
+/* Récap encaissements du jour */
+.pc-recap-jour {
+  display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:18px;
+}
+.pc-recap-box {
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:14px; text-align:center;
+}
+.pc-recap-val { font-size:22px; font-weight:800; color:#F97316; }
+.pc-recap-lbl { font-size:10px; color:var(--text2); margin-top:3px; }
+</style>
+
+<div class="sv-panel" id="sv-paiement-centre">
+  <div class="pc-wrap">
+
+    <!-- BANNER -->
+    <div class="pc-banner">
+      <div class="pc-banner-icon">🏢</div>
+      <div>
+        <div class="pc-banner-title">Paiement d'impôt au Centre — Commune de Gombe</div>
+        <div class="pc-banner-sub">Pour les bailleurs sans téléphone · L'agent enregistre et confirme le paiement en leur nom</div>
+      </div>
+    </div>
+
+    <!-- RÉCAP DU JOUR -->
+    <div class="pc-recap-jour">
+      <div class="pc-recap-box">
+        <div class="pc-recap-val" id="pc-nb-paie-jour">14</div>
+        <div class="pc-recap-lbl">Paiements au centre aujourd'hui</div>
+      </div>
+      <div class="pc-recap-box">
+        <div class="pc-recap-val" id="pc-total-jour">$4 480</div>
+        <div class="pc-recap-lbl">Total encaissé au guichet</div>
+      </div>
+      <div class="pc-recap-box">
+        <div class="pc-recap-val" id="pc-agent-jour">AGT-2047</div>
+        <div class="pc-recap-lbl">Agent responsable</div>
+      </div>
+    </div>
+
+    <!-- FORMULAIRE PRINCIPAL -->
+    <div class="pc-card" id="pc-form-section">
+      <div class="pc-card-hdr">
+        <div class="pc-hdr-icon orange">👤</div>
+        <div>
+          <div class="pc-hdr-title">Étape 1 — Identification du Bailleur</div>
+          <div class="pc-hdr-sub">Renseigner les informations fiscales du bailleur venu payer au centre</div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-grid2" style="margin-bottom:14px">
+          <div class="pc-field">
+            <label class="pc-label">Nom complet <span class="pc-req">*</span></label>
+            <input class="pc-input" id="pc-nom" placeholder="Ex: MWAMBA Jean-Pierre">
+          </div>
+          <div class="pc-field">
+            <label class="pc-label">N° DGRK / Contribuable <span class="pc-req">*</span></label>
+            <input class="pc-input" id="pc-dgrk" placeholder="DGRK-KIN-XXXX-XXXX" style="font-family:'JetBrains Mono',monospace">
+          </div>
+        </div>
+        <div class="pc-grid2" style="margin-bottom:14px">
+          <div class="pc-field">
+            <label class="pc-label">N° NIF (Numéro d'Identification Fiscale) <span class="pc-req">*</span></label>
+            <input class="pc-input" id="pc-nif" placeholder="A-XXXXXXXXXX" style="font-family:'JetBrains Mono',monospace">
+          </div>
+          <div class="pc-field">
+            <label class="pc-label">N° Parcelle <span class="pc-req">*</span></label>
+            <input class="pc-input" id="pc-parcelle" placeholder="P-2024-XXXXX" style="font-family:'JetBrains Mono',monospace">
+          </div>
+        </div>
+        <div class="pc-grid2" style="margin-bottom:14px">
+          <div class="pc-field">
+            <label class="pc-label">Téléphone (pour SMS de confirmation)</label>
+            <input class="pc-input" id="pc-tel" placeholder="+243 8X XXX XXXX" type="tel">
+          </div>
+          <div class="pc-field">
+            <label class="pc-label">Commune</label>
+            <select class="pc-input" id="pc-commune">
+              <option>Gombe</option><option>Limete</option><option>Lemba</option>
+              <option>Kasa-Vubu</option><option>Ngaliema</option><option>Ndjili</option>
+              <option>Matete</option><option>Selembao</option><option>Masina</option>
+            </select>
+          </div>
+        </div>
+        <div class="pc-info-box" style="margin-bottom:16px">
+          ℹ️ <span>Après saisie du N° DGRK, le système retrouvera automatiquement le bailleur et pré-remplira ses parcelles et le montant dû.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PÉRIODE & MONTANT -->
+    <div class="pc-card">
+      <div class="pc-card-hdr">
+        <div class="pc-hdr-icon blue">📅</div>
+        <div>
+          <div class="pc-hdr-title">Étape 2 — Période & Montant</div>
+          <div class="pc-hdr-sub">Sélectionner le(s) mois concerné(s)</div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px" id="pc-mois-grid">
+          <!-- Généré par JS -->
+        </div>
+        <div class="pc-total-row">
+          <div>
+            <div class="pc-total-label">Montant total à encaisser</div>
+            <div class="pc-total-detail" id="pc-detail-mois">1 mois sélectionné</div>
+          </div>
+          <div style="text-align:right">
+            <div class="pc-total-val" id="pc-montant-total">$320</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODE DE PAIEMENT AU CENTRE -->
+    <div class="pc-card">
+      <div class="pc-card-hdr">
+        <div class="pc-hdr-icon green">💵</div>
+        <div>
+          <div class="pc-hdr-title">Étape 3 — Mode de Paiement au Guichet</div>
+          <div class="pc-hdr-sub">Comment le bailleur règle-t-il au centre ?</div>
+        </div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-methods">
+          <div class="pc-method sel" onclick="pcSelectMethod(this,'especes')">
+            <div class="pc-method-icon">💵</div>
+            <div class="pc-method-name">Espèces</div>
+            <div class="pc-method-sub">Cash au guichet</div>
+          </div>
+          <div class="pc-method" onclick="pcSelectMethod(this,'mpesa')">
+            <div class="pc-method-icon">📱</div>
+            <div class="pc-method-name">M-Pesa</div>
+            <div class="pc-method-sub">Via agent</div>
+          </div>
+          <div class="pc-method" onclick="pcSelectMethod(this,'airtel')">
+            <div class="pc-method-icon">📡</div>
+            <div class="pc-method-name">Airtel Money</div>
+            <div class="pc-method-sub">Via agent</div>
+          </div>
+          <div class="pc-method" onclick="pcSelectMethod(this,'orange')">
+            <div class="pc-method-icon">🟠</div>
+            <div class="pc-method-name">Orange Money</div>
+            <div class="pc-method-sub">Via agent</div>
+          </div>
+          <div class="pc-method" onclick="pcSelectMethod(this,'cheque')">
+            <div class="pc-method-icon">📝</div>
+            <div class="pc-method-name">Chèque</div>
+            <div class="pc-method-sub">Banque locale</div>
+          </div>
+          <div class="pc-method" onclick="pcSelectMethod(this,'virement')">
+            <div class="pc-method-icon">🏦</div>
+            <div class="pc-method-name">Virement</div>
+            <div class="pc-method-sub">Equity · Rawbank</div>
+          </div>
+        </div>
+
+        <div class="pc-field" style="margin-bottom:16px">
+          <label class="pc-label">Référence de transaction / N° reçu (si applicable)</label>
+          <input class="pc-input" id="pc-ref-ext" placeholder="Optionnel — Ex: numéro reçu caisse" style="font-family:'JetBrains Mono',monospace">
+        </div>
+
+        <div class="pc-info-box" style="background:rgba(249,115,22,0.07);border-color:rgba(249,115,22,0.25);color:#92400E;margin-bottom:18px">
+          ⚠️ <span>En confirmant ce paiement, l'agent certifie avoir réceptionné les fonds. Le bailleur recevra un SMS de confirmation et le Ministère sera notifié instantanément.</span>
+        </div>
+
+        <button class="pc-submit-btn" id="pc-submit-btn" onclick="pcConfirmerPaiement()">
+          🔒 Confirmer l'encaissement de <span id="pc-btn-montant">$320</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- SUCCÈS -->
+    <div class="pc-success" id="pc-success">
+      <div class="pc-success-anim">✓</div>
+      <div class="pc-suc-title">Paiement enregistré !</div>
+      <div class="pc-suc-ref" id="pc-suc-ref">CTR-KIN-2026-00000</div>
+
+      <div class="pc-sms-badge">
+        📲 SMS de confirmation envoyé au bailleur : <strong id="pc-sms-tel">+243 8X XXX XXXX</strong>
+      </div>
+
+      <div class="pc-notif-chain">
+        <div class="pc-notif-title">✅ Notifications envoyées automatiquement</div>
+        <div class="pc-notif-step">
+          <div class="pc-ns-icon">✓</div>
+          <div class="pc-ns-text">Reçu fiscal généré et remis au bailleur</div>
+          <div class="pc-ns-time" id="pc-nt1">--:--</div>
+        </div>
+        <div class="pc-notif-step">
+          <div class="pc-ns-icon">✓</div>
+          <div class="pc-ns-text">SMS envoyé au bailleur — confirmation paiement</div>
+          <div class="pc-ns-time" id="pc-nt2">--:--</div>
+        </div>
+        <div class="pc-notif-step">
+          <div class="pc-ns-icon">✓</div>
+          <div class="pc-ns-text">Superviseur de Gombe — dossier mis à jour</div>
+          <div class="pc-ns-time" id="pc-nt3">--:--</div>
+        </div>
+        <div class="pc-notif-step">
+          <div class="pc-ns-icon">✓</div>
+          <div class="pc-ns-text">Base DGRK nationale — encaissement enregistré</div>
+          <div class="pc-ns-time" id="pc-nt4">--:--</div>
+        </div>
+        <div class="pc-notif-step">
+          <div class="pc-ns-icon">✓</div>
+          <div class="pc-ns-text">Tableau de bord Ministre — total actualisé</div>
+          <div class="pc-ns-time" id="pc-nt5">--:--</div>
+        </div>
+      </div>
+
+      <button class="pc-new-btn" onclick="pcReset()">＋ Nouveau paiement</button>
+    </div>
+
+  </div>
 </div>
 
 <!-- ═══════════ APP AGENT ═══════════ -->
@@ -3652,8 +4008,9 @@ SUP-001</div>
 
 </div>
 
-<script>
-  // ══════════════════════════════
+<script> 
+
+// ══════════════════════════════
 // NAVIGATION PRINCIPALE
 // ══════════════════════════════
 function launch(role) {
@@ -4029,6 +4386,7 @@ function svTab(name, btn) {
   document.getElementById('sv-'+name).classList.add('active');
   btn.classList.add('active');
   if(name==='encaissements') renderSvPayments();
+  if(name==='paiement-centre') { pcInitMois(); pcUpdateTotal(); }
 }
 
 // ══════════════════════════════
@@ -4167,6 +4525,145 @@ function agRefreshGPS(){
   document.getElementById('ag-coords').textContent=coords[Math.floor(Math.random()*coords.length)];
 }
 function agLang(l,btn){ document.querySelectorAll('.ag-lb').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+
+// ══════════════════════════════
+// PAIEMENT AU CENTRE
+// ══════════════════════════════
+let pcMethode = 'especes';
+let pcMoisSelectionnes = 1;
+const montantParMois = 320;
+
+const moisLabels = ['Janv.','Févr.','Mars','Avril','Mai','Juin','Juil.','Août','Sept.','Oct.','Nov.','Déc.'];
+const moisEtats  = ['paid','paid','due','future','future','future','future','future','future','future','future','future'];
+
+function pcInitMois() {
+  const grid = document.getElementById('pc-mois-grid');
+  if(!grid) return;
+  grid.innerHTML = moisLabels.map((m, i) => {
+    const etat = moisEtats[i];
+    const isPaid   = etat === 'paid';
+    const isDue    = etat === 'due';
+    const isFuture = etat === 'future';
+    const selClass = isDue ? 'pc-mois-selected' : '';
+    return `
+      <div class="pc-mois-btn ${etat} ${selClass}" onclick="pcToggleMois(this,${i})"
+        style="padding:10px 6px;border-radius:9px;border:1.5px solid ${isPaid?'#10B981':isDue?'#F97316':'#CBD5E1'};
+               background:${isPaid?'rgba(16,185,129,0.07)':isDue?'rgba(249,115,22,0.08)':'#F8FAFC'};
+               cursor:${isPaid?'default':'pointer'};text-align:center;transition:all .2s;position:relative;">
+        <div style="font-size:12px;font-weight:700;color:${isPaid?'#059669':isDue?'#F97316':'#64748B'}">${m}</div>
+        <div style="font-size:9px;font-weight:700;margin-top:3px;color:${isPaid?'#059669':isDue?'#DC2626':'#94A3B8'}">
+          ${isPaid?'✓ Payé':isDue?'⚠ Dû':'À venir'}
+        </div>
+        ${selClass?'<div style="position:absolute;top:4px;right:5px;font-size:10px;color:#F97316;font-weight:800">✓</div>':''}
+      </div>`;
+  }).join('');
+}
+
+function pcToggleMois(el, idx) {
+  if(moisEtats[idx] === 'paid') return;
+  const isSel = el.classList.contains('pc-mois-selected');
+  if(isSel) {
+    el.classList.remove('pc-mois-selected');
+    el.style.border = moisEtats[idx]==='due' ? '1.5px solid #F97316' : '1.5px solid #CBD5E1';
+    el.style.background = moisEtats[idx]==='due' ? 'rgba(249,115,22,0.08)' : '#F8FAFC';
+    el.querySelector('div:last-child') && el.querySelector('.check-mark') && el.querySelector('.check-mark').remove();
+  } else {
+    el.classList.add('pc-mois-selected');
+    el.style.border = '1.5px solid #F97316';
+    el.style.background = 'rgba(249,115,22,0.12)';
+  }
+  pcUpdateTotal();
+}
+
+function pcUpdateTotal() {
+  const nb = document.querySelectorAll('.pc-mois-selected').length || 1;
+  pcMoisSelectionnes = nb;
+  const total = nb * montantParMois;
+  const totalEl = document.getElementById('pc-montant-total');
+  const detailEl = document.getElementById('pc-detail-mois');
+  const btnEl = document.getElementById('pc-btn-montant');
+  if(totalEl) totalEl.textContent = '$' + total.toLocaleString();
+  if(detailEl) detailEl.textContent = nb + ' mois sélectionné' + (nb>1?'s':'') + ' × $' + montantParMois;
+  if(btnEl) btnEl.textContent = '$' + total.toLocaleString();
+}
+
+function pcSelectMethod(el, methode) {
+  document.querySelectorAll('.pc-method').forEach(m => m.classList.remove('sel'));
+  el.classList.add('sel');
+  pcMethode = methode;
+}
+
+function pcConfirmerPaiement() {
+  const btn = document.getElementById('pc-submit-btn');
+  if(!btn) return;
+  btn.disabled = true;
+  btn.innerHTML = '⏳ Traitement en cours...';
+
+  setTimeout(() => {
+    const now = new Date();
+    const fmt = d => d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const ref = 'CTR-KIN-' + now.getFullYear() + '-' + Math.floor(10000 + Math.random()*89999);
+    const tel = document.getElementById('pc-tel')?.value || '+243 8X XXX XXXX';
+    const nom = document.getElementById('pc-nom')?.value || 'Bailleur';
+    const total = pcMoisSelectionnes * montantParMois;
+
+    // Renseigner succès
+    document.getElementById('pc-suc-ref').textContent = ref;
+    document.getElementById('pc-sms-tel').textContent = tel || '+243 8X XXX XXXX';
+    ['pc-nt1','pc-nt2','pc-nt3','pc-nt4','pc-nt5'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      if(el) el.textContent = fmt(new Date(now.getTime() + i * 1100));
+    });
+
+    // Cacher formulaire, afficher succès
+    document.getElementById('pc-form-section').style.display = 'none';
+    document.querySelectorAll('.pc-card').forEach(c => c.style.display='none');
+    document.getElementById('pc-success').classList.add('show');
+
+    // Mettre à jour compteurs du jour
+    const nbEl = document.getElementById('pc-nb-paie-jour');
+    const totEl = document.getElementById('pc-total-jour');
+    if(nbEl) nbEl.textContent = parseInt(nbEl.textContent) + 1;
+    if(totEl) {
+      const cur = parseInt(totEl.textContent.replace(/[$, ]/g,'')) + total;
+      totEl.textContent = '$' + cur.toLocaleString();
+    }
+
+    // Notifier le Ministre (ajouter dans ses alertes)
+    const al = document.getElementById('m-alertes-list');
+    if(al) {
+      const div = document.createElement('div');
+      div.className = 'm-alerte ap';
+      div.innerHTML = `<div class="a-type">▲ PAIEMENT CENTRE</div>
+        <div class="a-msg">🏢 Gombe (guichet) — ${nom||'Bailleur'} a payé <strong>$${total}</strong> en espèces · ${ref}</div>
+        <div class="a-time">À l'instant</div>`;
+      al.insertBefore(div, al.firstChild);
+    }
+
+    // Mettre à jour total encaissé ministre
+    const mTot = document.getElementById('m-total-enc');
+    if(mTot) {
+      const cur2 = parseInt(mTot.textContent.replace(/[$, ]/g,'')) + total;
+      mTot.textContent = '$' + cur2.toLocaleString();
+    }
+
+    btn.disabled = false;
+    btn.innerHTML = '🔒 Confirmer l\'encaissement de <span id="pc-btn-montant">$320</span>';
+  }, 2000);
+}
+
+function pcReset() {
+  document.getElementById('pc-success').classList.remove('show');
+  document.getElementById('pc-form-section').style.display = '';
+  document.querySelectorAll('.pc-card').forEach(c => c.style.display='');
+  // Vider les champs
+  ['pc-nom','pc-dgrk','pc-nif','pc-parcelle','pc-tel','pc-ref-ext'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  pcInitMois();
+  pcUpdateTotal();
+}
 </script>
 
 
@@ -5191,8 +5688,6 @@ to {
   color:var(--text);
   font-family:'JetBrains Mono',monospace;
 }
-
-
 </style>
 
 <!-- APP BAILLEUR HTML -->
@@ -6178,3 +6673,5 @@ function blResetPayment() {
 </html>
 
 
+
+  
